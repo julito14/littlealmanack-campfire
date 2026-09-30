@@ -19,7 +19,7 @@ Rails.application.routes.draw do
         end
       end
 
-      resource :join_code, only: :create
+      resources :invitations, only: %i[ index create destroy ]
       resource :logo, only: %i[ show destroy ]
       resource :custom_styles, only: %i[ edit update ]
     end
@@ -29,8 +29,8 @@ Rails.application.routes.draw do
     route_for :account_logo, v: Current.account&.updated_at&.to_fs(:number), size: options[:size]
   end
 
-  get "join/:join_code", to: "users#new", as: :join
-  post "join/:join_code", to: "users#create"
+  get "join/:token", to: "users#new", as: :join
+  post "join/:token", to: "users#create"
 
   resources :qr_code, only: :show
 

@@ -94,9 +94,14 @@
   <% end %>
 
   <div class="margin-block pad-inline pad-block-start fill-shade border-radius">
-    <%= render "accounts/invite" %>
+    <% if Current.user.administrator? %>
+      <%= link_to account_invitations_path, class: "btn btn--reversed center txt-medium", style: "view-transition-name: invitations" do %>
+        <%= image_tag "person-add.svg", aria: { hidden: "true" }, size: 20 %>
+        <span>Invite people</span>
+      <% end %>
 
-    <hr class="margin-block separator full-width" style="--border-style: solid">
+      <hr class="margin-block separator full-width" style="--border-style: solid">
+    <% end %>
 
     <menu class="flex flex-column gap margin-none pad">
       <turbo-frame id="account_users">

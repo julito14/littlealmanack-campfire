@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+require File.expand_path("../../config/environment", File.dirname(__FILE__))
+
+# Creates one-time invitations for the email addresses on stdin (one per line) and prints
+# "email,link" for each, ready for a mail merge. Members and pending invites are skipped.
+#
+#   script/admin/create-invitations < emails.txt > invitations.csv
+
+base_url = ENV["BASE_URL"].presence or abort "Set BASE_URL, e.g. BASE_URL=https://chat.example.com"
+creator = User.administrator.order(:created_at).first or abort "Create the administrator account first"
+
+$stdin.each_line.map(&:strip).compact_blank.uniq.each do |email_address|
+  invitation = Invitation.create(email_address: email_address, creator: creator)
+
+  if invitation.persisted?
+    puts [ invitation.email_address, base_url.chomp("/") + Rails.application.routes.url_helpers.join_path(invitation.token) ].join(",")
+  else
+    warn "Skipped #{email_address}: #{invitation.errors.full_messages.to_sentence}"
+  end
+end

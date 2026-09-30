@@ -1,0 +1,27 @@
+<% url = join_url(invitation.token) %>
+
+<li class="flex flex-column gap flush fill-shade border-radius pad-block pad-inline-double">
+  <div class="flex align-center gap">
+    <strong class="overflow-ellipsis flex-item-grow txt-align-start"><%= invitation.email_address %></strong>
+    <span class="txt-subtle txt-small txt-nowrap">Created <%= invitation.created_at.to_date.to_fs(:long) %></span>
+  </div>
+
+  <div class="flex align-center gap">
+    <%= image_tag "link.svg", aria: { hidden: "true" }, size: 20, class: "colorize--black" %>
+
+    <div class="flex-item-grow">
+      <input type="text" class="input full-width fill-white" value="<%= url %>" aria-label="Invite link for <%= invitation.email_address %>" readonly>
+    </div>
+
+    <%= button_to_copy_to_clipboard(url) do %>
+      <%= image_tag "copy-paste.svg", aria: { hidden: "true" }, size: 20 %>
+      <span class="for-screen-reader">Copy invite link for <%= invitation.email_address %></span>
+    <% end %>
+
+    <%= button_to account_invitation_path(invitation), method: :delete, class: "btn btn--negative txt-small",
+          data: { turbo_confirm: "Revoke the invite for #{invitation.email_address}? The link will stop working." } do %>
+      <%= image_tag "minus.svg", aria: { hidden: "true" }, size: 20 %>
+      <span class="for-screen-reader">Revoke invite for <%= invitation.email_address %></span>
+    <% end %>
+  </div>
+</li>

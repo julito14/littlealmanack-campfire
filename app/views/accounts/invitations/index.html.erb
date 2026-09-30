@@ -1,0 +1,58 @@
+<% @page_title = "Invitations" %>
+
+<% content_for :nav do %>
+  <div class="flex-item-justify-start">
+    <%= link_back_to edit_account_path %>
+  </div>
+<% end %>
+
+<section class="panel panel--wide txt-align-center flex flex-column gap position-relative" style="view-transition-name: invitations">
+  <div class="pad-inline-double center">
+    <h1 class="margin-none">Invitations</h1>
+    <p class="margin-none-block-start">Each invite link works once, and only for the email address it was made for.</p>
+  </div>
+
+  <%= form_with model: @invitation, url: account_invitations_path, class: "flex flex-column gap center" do |form| %>
+    <div class="flex align-center gap">
+      <label class="flex align-center gap flex-item-grow txt-large input input--actor">
+        <%= form.email_field :email_address, class: "input", placeholder: "Their email address", autofocus: true, required: true,
+              autocomplete: "off", data: { "1p-ignore": true } %>
+        <%= image_tag "email.svg", aria: { hidden: "true" }, size: 24, class: "colorize--black" %>
+      </label>
+
+      <%= form.button class: "btn btn--reversed", type: "submit" do %>
+        <%= image_tag "add.svg", aria: { hidden: "true" }, size: 20 %>
+        <span class="for-screen-reader">Create invite link</span>
+      <% end %>
+    </div>
+
+    <% if @invitation.errors.any? %>
+      <p class="txt-negative margin-none" role="alert"><%= @invitation.errors.full_messages.to_sentence %></p>
+    <% end %>
+  <% end %>
+
+  <% if @pending_invitations.any? %>
+    <div class="pad-inline pad-block-start">
+      <h2 class="txt-medium margin-none">Waiting to join</h2>
+      <menu class="flex flex-column gap margin-none pad">
+        <%= render partial: "accounts/invitations/invitation", collection: @pending_invitations %>
+      </menu>
+    </div>
+  <% end %>
+
+  <% if @accepted_invitations.any? %>
+    <div class="pad-inline pad-block-start">
+      <h2 class="txt-medium margin-none">Joined</h2>
+      <menu class="flex flex-column gap margin-none pad txt-align-start">
+        <% @accepted_invitations.each do |invitation| %>
+          <li class="flex align-center gap">
+            <span class="overflow-ellipsis flex-item-grow"><%= invitation.email_address %></span>
+            <span class="txt-subtle txt-small txt-nowrap">
+              <%= invitation.user&.name %> · <%= invitation.accepted_at.to_date.to_fs(:long) %>
+            </span>
+          </li>
+        <% end %>
+      </menu>
+    </div>
+  <% end %>
+</section>

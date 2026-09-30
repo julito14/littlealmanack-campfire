@@ -1,0 +1,11 @@
+pending:
+  token: PendingInviteToken1234ab
+  email_address: newcomer@example.com
+  creator: david
+
+accepted:
+  token: AcceptedInviteToken12345
+  email_address: kevin@37signals.com
+  creator: david
+  user: kevin
+  accepted_at: <%= 1.week.ago.to_fs(:db) %>

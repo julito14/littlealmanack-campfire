@@ -1,18 +1,16 @@
-<% if @room == Room.original && !@room.messages.paged? %>
+<% if Current.user.administrator? && @room == Room.original && !@room.messages.paged? %>
   <div id="system_welcome" class="message message--formatted txt-align-center center">
     <div class="message__body center">
       <div class="message__body-content position-relative">
         <%= account_logo_tag style: "center margin-block-end txt-large" %>
-        <div class="flex align-center gap">
-          <div class="system-welcome--translation">
-            <%= translation_button(:invite_message) %>
-          </div>
-          <p>
-            <strong>Welcome to Campfire</strong><br>
-            To invite people to chat, share the join link below.
-          </p>
-        </div>
-        <%= render "accounts/invite" %>
+        <p>
+          <strong>Welcome to Campfire</strong><br>
+          To invite people, create a one-time invite link for each person.
+        </p>
+        <%= link_to account_invitations_path, class: "btn btn--reversed center txt-medium" do %>
+          <%= image_tag "person-add.svg", aria: { hidden: "true" }, size: 20 %>
+          <span>Invite people</span>
+        <% end %>
       </div>
     </div>
   </div>
