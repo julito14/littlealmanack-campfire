@@ -19,6 +19,9 @@ class User < ApplicationRecord
 
   has_secure_password validations: false
 
+  # Also applied to sign-in lookups, so "Reader@Example.com " finds reader@example.com.
+  normalizes :email_address, with: ->(email) { email.strip.downcase }
+
   after_create_commit :grant_membership_to_open_rooms
 
   scope :ordered, -> { order("LOWER(name)") }
