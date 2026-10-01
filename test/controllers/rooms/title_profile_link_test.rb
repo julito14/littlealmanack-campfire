@@ -9,6 +9,8 @@ class Rooms::TitleProfileLinkTest < ActionDispatch::IntegrationTest
     get room_url(rooms(:david_and_jason))
 
     assert_select "a.room--current[href=?]", user_path(users(:jason)) do
+      assert_select ".avatar[style*=?]", fresh_user_avatar_path(users(:jason))
+      assert_select "img", count: 0
       assert_select "h1", /Jason/
     end
   end
