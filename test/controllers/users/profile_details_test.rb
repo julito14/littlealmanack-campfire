@@ -7,7 +7,7 @@ class Users::ProfileDetailsTest < ActionDispatch::IntegrationTest
 
   test "members fill in their details on their settings page" do
     get user_profile_url
-    assert_select "input[name='user[location]']"
+    assert_select "input[name='user[location]'][placeholder=?]", "Location (e.g. New York, US)"
     assert_select "textarea[name='user[books]']"
     assert_select "input[name='user[website_url]']"
 
