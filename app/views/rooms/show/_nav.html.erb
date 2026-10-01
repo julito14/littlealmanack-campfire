@@ -1,7 +1,7 @@
 <% content_for :nav do %>
   <%= account_logo_tag if Current.account.logo.attached? %>
 
-  <%= tag.span class: "btn btn--reversed btn--faux room--current" do %>
+  <%= room_title_tag room do %>
     <h1 class="room__contents txt-medium overflow-ellipsis">
       <% if room.direct? %>
         <span class="for-screen-reader">Ping with</span>
