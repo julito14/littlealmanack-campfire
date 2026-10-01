@@ -4,7 +4,9 @@
   </figure>
 
   <div class="min-width">
-    <div class="overflow-ellipsis fill-shade"><strong><%= user.name %></strong></div>
+    <div class="overflow-ellipsis fill-shade">
+      <%= link_to user_path(user), class: "txt-undecorated", data: { turbo_frame: "_top" } do %><strong><%= user.name %></strong><% end %>
+    </div>
   </div>
 
   <hr class="separator" aria-hidden="true">
