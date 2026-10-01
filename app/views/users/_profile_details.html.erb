@@ -1,0 +1,25 @@
+<% if user.location %>
+  <div class="txt-subtle"><%= user.location %></div>
+<% end %>
+
+<div><%= user.bio %></div>
+
+<% if user.books_list.any? %>
+  <div class="fill-shade border-radius pad txt-align-start margin-block-start">
+    <div class="txt-small txt-subtle">Some books I like</div>
+    <% user.books_list.each do |book| %>
+      <div><%= book %></div>
+    <% end %>
+  </div>
+<% end %>
+
+<% if user.profile_links.any? %>
+  <div class="flex flex-wrap justify-center gap margin-block-start">
+    <% user.profile_links.each do |label, url| %>
+      <%= link_to url, class: "btn txt-small", target: "_blank", rel: "noopener noreferrer nofollow ugc" do %>
+        <%= image_tag label == "Website" ? "laptop.svg" : "link.svg", aria: { hidden: "true" }, size: 16 %>
+        <span><%= label %></span>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>

@@ -1,0 +1,37 @@
+<% if user.errors.any? %>
+  <div class="txt-negative txt-align-center" role="alert">
+    <% user.errors.map(&:message).uniq.each do |message| %>
+      <div><%= message %></div>
+    <% end %>
+  </div>
+<% end %>
+
+<div class="flex align-center gap">
+  <span class="btn" style="visibility: hidden" aria-hidden="true"></span>
+  <label class="flex align-center gap flex-item-grow input input--actor">
+    <%= form.text_field :location, class: "input txt-large", placeholder: "Where you are, like Barcelona, Spain", maxlength: 60,
+          autocomplete: "off", aria: { label: "Location" }, data: { "1p-ignore": true } %>
+    <%= image_tag "web.svg", aria: { hidden: "true" }, size: 24, class: "colorize--black" %>
+  </label>
+</div>
+
+<div class="flex align-start gap">
+  <span class="btn" style="visibility: hidden" aria-hidden="true"></span>
+  <label class="flex align--center gap flex-item--grow input input--actor">
+    <%= form.text_area :books, class: "input txt-large", placeholder: "Some books I like, one per line", maxlength: 300,
+          rows: 3, aria: { label: "Some books I like" } %>
+    <%= image_tag "common-file-text.svg", aria: { hidden: "true" }, size: 24, class: "colorize--black" %>
+  </label>
+</div>
+
+<% { website_url: "Your website", x_handle: "Your X username", linkedin_url: "Your LinkedIn profile link",
+     instagram_handle: "Your Instagram username" }.each do |field, placeholder| %>
+  <div class="flex align-center gap">
+    <span class="btn" style="visibility: hidden" aria-hidden="true"></span>
+    <label class="flex align-center gap flex-item-grow input input--actor">
+      <%= form.text_field field, class: "input txt-large", placeholder: placeholder, maxlength: 200,
+            autocomplete: "off", aria: { label: placeholder }, data: { "1p-ignore": true } %>
+      <%= image_tag field == :website_url ? "laptop.svg" : "link.svg", aria: { hidden: "true" }, size: 24, class: "colorize--black" %>
+    </label>
+  </div>
+<% end %>

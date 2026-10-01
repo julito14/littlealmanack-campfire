@@ -12,12 +12,17 @@ releases, with one change: **people can only join through a one-time invite made
 - **Members can't invite anyone.** The join link is gone from Account settings and from the welcome
   note in the first room; both now show an "Invite people" button to administrators only.
   The old `/join/<account code>` links return 404.
+- **Profile details:** optional location, "some books I like", website, X, LinkedIn and Instagram,
+  filled in on each member's settings page and shown on their profile page (empty ones are hidden).
+  Usernames can be typed as `@name` or pasted as profile links; only real http(s) links are accepted.
 - **Bulk invitations:** `script/admin/create-invitations < emails.txt` prints `email,link` lines
   (needs `BASE_URL`, which ONCE sets).
 
 Code: `app/models/invitation.rb`, `app/controllers/accounts/invitations_controller.rb`,
 `app/views/accounts/invitations/`, `UsersController#set_invitation`, the routes for `join/:token`,
-and tests in `test/models/invitation_test.rb`, `test/controllers/users_controller_test.rb`,
+`app/models/user/profile_details.rb`, `app/views/users/_profile_details.html.erb`,
+`app/views/users/profiles/_details_fields.html.erb`, and tests in `test/models/invitation_test.rb`,
+`test/models/user/profile_details_test.rb`, `test/controllers/users/profile_details_test.rb`, `test/controllers/users_controller_test.rb`,
 `test/controllers/accounts/invitations_controller_test.rb`, `test/controllers/invite_visibility_test.rb`.
 
 ## Image

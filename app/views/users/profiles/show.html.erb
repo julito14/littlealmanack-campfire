@@ -89,6 +89,8 @@
         </label>
       </div>
 
+      <%= render "users/profiles/details_fields", form: form, user: @user %>
+
       <%= profile_form_submit_button %>
     </div>
   <% end %>

@@ -7,8 +7,12 @@ class Users::ProfilesController < ApplicationController
   end
 
   def update
-    @user.update user_params
-    redirect_to user_profile_url, notice: update_notice
+    if @user.update(user_params)
+      redirect_to user_profile_url, notice: update_notice
+    else
+      show
+      render :show, status: :unprocessable_entity
+    end
   end
 
   private
@@ -17,7 +21,7 @@ class Users::ProfilesController < ApplicationController
     end
 
     def user_params
-      params.require(:user).permit(:name, :avatar, :email_address, :password, :bio).compact
+      params.require(:user).permit(:name, :avatar, :email_address, :password, :bio, *User::ProfileDetails::ATTRIBUTES).compact
     end
 
     def update_notice
