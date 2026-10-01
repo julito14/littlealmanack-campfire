@@ -14,10 +14,11 @@
 <% end %>
 
 <% if user.profile_links.any? %>
+  <% icons = { "Website" => "laptop.svg", "X" => "brand-x.svg", "LinkedIn" => "brand-linkedin.svg", "Instagram" => "brand-instagram.svg" } %>
   <div class="flex flex-wrap justify-center gap margin-block-start">
     <% user.profile_links.each do |label, url| %>
       <%= link_to url, class: "btn txt-small", target: "_blank", rel: "noopener noreferrer nofollow ugc" do %>
-        <%= image_tag label == "Website" ? "laptop.svg" : "link.svg", aria: { hidden: "true" }, size: 16 %>
+        <%= image_tag icons.fetch(label), aria: { hidden: "true" }, size: 16 %>
         <span><%= label %></span>
       <% end %>
     <% end %>

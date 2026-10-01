@@ -24,14 +24,16 @@
   </label>
 </div>
 
-<% { website_url: "Your website", x_handle: "Your X username", linkedin_url: "Your LinkedIn profile link",
-     instagram_handle: "Your Instagram username" }.each do |field, placeholder| %>
+<% { website_url:      [ "Your website",               "laptop.svg" ],
+     x_handle:         [ "Your X username",            "brand-x.svg" ],
+     linkedin_url:     [ "Your LinkedIn profile link", "brand-linkedin.svg" ],
+     instagram_handle: [ "Your Instagram username",    "brand-instagram.svg" ] }.each do |field, (placeholder, icon)| %>
   <div class="flex align-center gap">
     <span class="btn" style="visibility: hidden" aria-hidden="true"></span>
     <label class="flex align-center gap flex-item-grow input input--actor">
       <%= form.text_field field, class: "input txt-large", placeholder: placeholder, maxlength: 200,
             autocomplete: "off", aria: { label: placeholder }, data: { "1p-ignore": true } %>
-      <%= image_tag field == :website_url ? "laptop.svg" : "link.svg", aria: { hidden: "true" }, size: 24, class: "colorize--black" %>
+      <%= image_tag icon, aria: { hidden: "true" }, size: 24, class: "colorize--black" %>
     </label>
   </div>
 <% end %>
