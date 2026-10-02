@@ -26,9 +26,9 @@
 
     <div class="nametag__inner flex flex-column gap">
       <fieldset class="flex flex-column center-block">
-        <legend class="txt-align-center flex gap">
+        <legend class="flex flex-column align-center gap center txt-align-center">
           <%= account_logo_tag %>
-          <strong class="txt-large"><%= Current.account.name %></strong>
+          <strong class="txt-large" style="text-wrap: balance"><%= Current.account.name %></strong>
         </legend>
 
         <label class="align-center center avatar__form gap" data-controller="upload-preview">
