@@ -26,6 +26,7 @@ class Accounts::InvitationsController < ApplicationController
     def set_invitations
       @pending_invitations = Invitation.pending.ordered
       @accepted_invitations = Invitation.accepted.includes(:user).ordered
+      @open_signup_count = User.active.where(joined_via: "open_link").count
     end
 
     def invitation_params

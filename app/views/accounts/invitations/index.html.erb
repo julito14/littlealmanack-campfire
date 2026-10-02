@@ -12,6 +12,8 @@
     <p class="margin-none-block-start">Each invite link works once, and only for the email address it was made for.</p>
   </div>
 
+  <%= render "accounts/invitations/open_signup", count: @open_signup_count %>
+
   <%= form_with model: @invitation, url: account_invitations_path, class: "flex flex-column gap center" do |form| %>
     <div class="flex align-center gap">
       <label class="flex align-center gap flex-item-grow txt-large input input--actor">

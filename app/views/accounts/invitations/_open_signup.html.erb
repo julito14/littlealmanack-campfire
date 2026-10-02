@@ -1,0 +1,47 @@
+<% open = Current.account.open_signup? %>
+
+<div class="fill-shade border-radius pad-block pad-inline-double flex flex-column gap txt-align-start">
+  <div class="flex align-center gap">
+    <div class="flex-item-grow">
+      <strong>Open sign-up link</strong>
+      <div class="txt-small txt-subtle">
+        <% if open %>
+          On: anyone with this link can join, with any email. <%= pluralize(count, "person") %> joined through it so far.
+        <% else %>
+          Off: people can only join with a personal invite.
+        <% end %>
+      </div>
+    </div>
+
+    <% if open %>
+      <%= button_to "Turn off", account_open_signup_path, method: :delete, class: "btn txt-small txt-nowrap flex-item-no-shrink",
+            data: { turbo_confirm: "Turn off the open link? It stops working right away. Personal invites keep working." } %>
+    <% else %>
+      <%= button_to "Turn on", account_open_signup_path, class: "btn btn--reversed txt-small txt-nowrap flex-item-no-shrink",
+            data: { turbo_confirm: "Turn on open sign-up? Anyone with the link will be able to join." } %>
+    <% end %>
+  </div>
+
+  <% if open %>
+    <% url = join_url(Current.account.join_code) %>
+
+    <div class="flex align-center gap">
+      <%= image_tag "link.svg", aria: { hidden: "true" }, size: 20, class: "colorize--black" %>
+
+      <div class="flex-item-grow">
+        <input type="text" class="input full-width fill-white" value="<%= url %>" aria-label="Open sign-up link" readonly>
+      </div>
+
+      <%= button_to_copy_to_clipboard(url) do %>
+        <%= image_tag "copy-paste.svg", aria: { hidden: "true" }, size: 20 %>
+        <span class="for-screen-reader">Copy open sign-up link</span>
+      <% end %>
+
+      <%= button_to account_open_signup_path, method: :patch, class: "btn",
+            data: { turbo_confirm: "Make a new link? The current one stops working, so anyone who has it will need the new one." } do %>
+        <%= image_tag "refresh.svg", aria: { hidden: "true" }, size: 20 %>
+        <span class="for-screen-reader">Make a new open sign-up link</span>
+      <% end %>
+    </div>
+  <% end %>
+</div>

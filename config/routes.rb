@@ -20,6 +20,7 @@ Rails.application.routes.draw do
       end
 
       resources :invitations, only: %i[ index create destroy ]
+      resource :open_signup, only: %i[ create update destroy ]
       resource :logo, only: %i[ show destroy ]
       resource :custom_styles, only: %i[ edit update ]
     end

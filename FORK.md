@@ -9,6 +9,11 @@ releases, with one change: **people can only join through a one-time invite made
   an invitation for an email address (Account settings → Invite people). Its link works once, and the
   account is always created with the invited email address, whatever is typed in the form.
   Unused invitations never expire, but can be revoked.
+- **Open sign-up (temporary seeding mode):** an admin can switch on one reusable public link
+  (Account settings → Invite people → Open sign-up link) that lets anyone join with any email.
+  It's the account's join code, off by default; turning it off makes the link 404 at once, and
+  "new link" replaces it. Personal invitations keep working either way. Sign-ups are rate-limited,
+  and `users.joined_via` records "invitation" or "open_link" for later pruning.
 - **Members can't invite anyone.** The join link is gone from Account settings and from the welcome
   note in the first room; both now show an "Invite people" button to administrators only.
   The old `/join/<account code>` links return 404.

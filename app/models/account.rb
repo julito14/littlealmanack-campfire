@@ -1,5 +1,5 @@
 class Account < ApplicationRecord
-  include Joinable
+  include Joinable, OpenSignup
 
   has_one_attached :logo do |attachable|
     attachable.variant :large, resize_to_limit: [ 512, 512 ], format: :png

@@ -10,12 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2026_10_01_120000) do
+ActiveRecord::Schema[8.2].define(version: 2026_10_02_120000) do
   create_table "accounts", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "custom_styles"
     t.string "join_code", null: false
     t.string "name", null: false
+    t.boolean "open_signup", default: false, null: false
     t.json "settings"
     t.integer "singleton_guard", default: 0, null: false
     t.datetime "updated_at", null: false
@@ -165,6 +166,7 @@ ActiveRecord::Schema[8.2].define(version: 2026_10_01_120000) do
     t.datetime "created_at", null: false
     t.string "email_address"
     t.string "instagram_handle"
+    t.string "joined_via"
     t.string "linkedin_url"
     t.string "location"
     t.string "name", null: false

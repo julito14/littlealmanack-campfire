@@ -19,7 +19,7 @@ class Invitation < ApplicationRecord
   # can't be used to sign up under someone else's address.
   def accept(user_attributes)
     transaction do
-      User.create!(user_attributes.merge(email_address: email_address)).tap do |user|
+      User.create!(user_attributes.merge(email_address: email_address, joined_via: "invitation")).tap do |user|
         update! user: user, accepted_at: Time.current
       end
     end
