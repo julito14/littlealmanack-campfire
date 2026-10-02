@@ -11,6 +11,14 @@
 <% end %>
 
 <%= form_with model: @user, url: join_path(params[:token]), class: "center" do |form| %>
+  <% if @user.errors.any? %>
+    <div class="txt-negative txt-align-center margin-block-end" role="alert">
+      <% @user.errors.map(&:message).uniq.each do |message| %>
+        <div><%= message %></div>
+      <% end %>
+    </div>
+  <% end %>
+
   <section class="nametag u-relative">
     <div class="flex justify-center align-center pad-block">
       <%= image_tag "lanyard.svg", class: "nametag__lanyard", aria: { hidden: "true" } %>
@@ -62,6 +70,8 @@
           <%= image_tag "password.svg", aria: { hidden: "true" }, size: 24, class: "colorize--black" %>
         </label>
       </div>
+
+      <%= render "users/signup_details_fields", form: form %>
 
       <%= form.button class: "btn btn--reversed center txt-large", type: "submit" do %>
         <%= image_tag "check.svg", aria: { hidden: "true" } %>

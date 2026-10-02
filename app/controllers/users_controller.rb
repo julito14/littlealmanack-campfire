@@ -20,6 +20,9 @@ class UsersController < ApplicationController
 
     start_new_session_for @user
     redirect_to root_url
+  rescue ActiveRecord::RecordInvalid => invalid
+    @user = invalid.record
+    render :new, status: :unprocessable_entity
   rescue ActiveRecord::RecordNotUnique
     redirect_to new_session_url(email_address: @invitation&.email_address || open_signup_email_address)
   end
@@ -49,6 +52,6 @@ class UsersController < ApplicationController
     end
 
     def user_params
-      params.require(:user).permit(:name, :avatar, :password)
+      params.require(:user).permit(:name, :avatar, :password, :bio, :location, :books)
     end
 end
