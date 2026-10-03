@@ -26,3 +26,14 @@
     <%= image_tag "common-file-text.svg", aria: { hidden: "true" }, size: 24, class: "colorize--black" %>
   </label>
 </div>
+
+<% { x_handle: [ "X username", "brand-x.svg" ], instagram_handle: [ "Instagram username", "brand-instagram.svg" ] }.each do |field, (label, icon)| %>
+  <div class="flex align-center gap">
+    <span class="btn" style="visibility: hidden" aria-hidden="true"></span>
+    <label class="flex align-center gap flex-item-grow txt-large input input--actor">
+      <%= form.text_field field, class: "input", placeholder: "@username", maxlength: 200,
+            autocomplete: "off", aria: { label: label }, data: { "1p-ignore": true } %>
+      <%= image_tag icon, aria: { hidden: "true" }, size: 24, class: "colorize--black" %>
+    </label>
+  </div>
+<% end %>

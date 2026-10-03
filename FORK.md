@@ -20,7 +20,7 @@ releases, with one change: **people can only join through a one-time invite made
 - **Profile details:** optional location, "some books I like", website, X, LinkedIn and Instagram,
   filled in on each member's settings page and shown on their profile page (empty ones are hidden).
   Usernames can be typed as `@name` or pasted as profile links; only real http(s) links are accepted.
-  The signup page also offers bio, location and books (optional); invalid input re-renders the form with a message.
+  The signup page also offers bio, location, books, X and Instagram (optional); invalid input re-renders the form with a message.
 - **Brand icons:** X, LinkedIn and Instagram logos in `app/assets/images/brand-*.svg` are from
   [Tabler Icons](https://tabler.io/icons) (MIT License).
 - **Bulk invitations:** `script/admin/create-invitations < emails.txt` prints `email,link` lines

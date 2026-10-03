@@ -1,13 +1,34 @@
 require "test_helper"
 
 class SignupDetailsTest < ActionDispatch::IntegrationTest
-  test "the signup page offers bio, location, and books as optional fields" do
+  test "the signup page offers bio, location, books, X, and Instagram as optional fields" do
     get join_url(invitations(:pending).token)
 
     assert_select "textarea[name='user[bio]']:not([required])"
     assert_select "input[name='user[location]']:not([required])"
     assert_select "textarea[name='user[books]']:not([required])"
+    assert_select "input[name='user[x_handle]'][placeholder='@username']:not([required])"
+    assert_select "input[name='user[instagram_handle]'][placeholder='@username']:not([required])"
     assert_select "input[name='user[website_url]']", count: 0
+    assert_select "input[name='user[linkedin_url]']", count: 0
+  end
+
+  test "X and Instagram given at signup are saved, whether typed as @name or pasted as a link" do
+    post join_url(invitations(:pending).token), params: { user: {
+      name: "Newcomer", password: "secret123456", x_handle: "@reader", instagram_handle: "https://www.instagram.com/reader.books/" } }
+
+    user = User.last
+    assert_equal "reader", user.x_handle
+    assert_equal "reader.books", user.instagram_handle
+  end
+
+  test "an invalid username at signup is explained and nothing is created" do
+    assert_no_difference -> { User.count } do
+      post join_url(invitations(:pending).token), params: { user: { name: "Newcomer", password: "secret123456", x_handle: "two words" } }
+    end
+
+    assert_response :unprocessable_entity
+    assert_select "[role=alert]", /need a username/
   end
 
   test "details given at signup are saved with an invitation" do
