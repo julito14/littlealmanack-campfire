@@ -8,6 +8,7 @@ module Message::Broadcasts
       parent_message.broadcast_thread_rows
     else
       broadcast_append_to room, :messages, target: [ room, :messages ]
+      broadcast_new_direct_room if room.direct? && room.messages.one?
     end
 
     broadcast_unread_room
@@ -42,6 +43,13 @@ module Message::Broadcasts
   end
 
   private
+    # A DM shows up in its members' lists once something has been said in it.
+    def broadcast_new_direct_room
+      room.memberships.includes(:user).each do |membership|
+        membership.broadcast_prepend_to membership.user, :rooms, target: :direct_rooms, partial: "users/sidebars/rooms/direct"
+      end
+    end
+
     def render_thread_row(unread:)
       ApplicationController.render partial: "users/sidebars/thread_row", locals: { thread: self, unread: unread }
     end

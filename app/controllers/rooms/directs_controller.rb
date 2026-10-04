@@ -4,10 +4,11 @@ class Rooms::DirectsController < RoomsController
     @room = Rooms::Direct.new
   end
 
+  # The DM reaches the other people's lists with its first message (Message::Broadcasts), not here:
+  # tapping someone shouldn't put an empty conversation in front of them.
   def create
     room = Rooms::Direct.find_or_create_for(selected_users)
 
-    broadcast_create_room(room)
     redirect_to room_url(room)
   end
 
@@ -21,12 +22,6 @@ class Rooms::DirectsController < RoomsController
 
     def selected_users_ids
       params.fetch(:user_ids, [])
-    end
-
-    def broadcast_create_room(room)
-      room.memberships.each do |membership|
-        membership.broadcast_prepend_to membership.user, :rooms, target: :direct_rooms, partial: "users/sidebars/rooms/direct"
-      end
     end
 
     # All users in a direct room can administer it. Only direct rooms, though: this
