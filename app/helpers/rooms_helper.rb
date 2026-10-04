@@ -52,6 +52,12 @@ module RoomsHelper
       id: "composer", class: "margin-block flex-item-grow contain", data: composer_data_options(room, thread), &
   end
 
+  # Sorts the sidebar by Room#sidebar_position, then by name. Zero-padded, since the sidebar
+  # sorts these as text.
+  def room_sort_key(room)
+    format("%08.2f %s", room.sidebar_position, room.name.to_s)
+  end
+
   def room_display_name(room, for_user: Current.user)
     if room.direct?
       room.users.without(for_user).pluck(:name).to_sentence.presence || for_user&.name

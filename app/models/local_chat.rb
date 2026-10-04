@@ -88,7 +88,7 @@ module LocalChat
 
     def show_in_sidebars(room, of:)
       of.each do |user|
-        Turbo::StreamsChannel.broadcast_append_to user, :rooms, target: "local_rooms",
+        Turbo::StreamsChannel.broadcast_append_to user, :rooms, target: "shared_rooms",
           partial: "users/sidebars/rooms/shared", locals: { room: room, unread: true }
       end
     end

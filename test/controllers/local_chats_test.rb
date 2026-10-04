@@ -14,7 +14,7 @@ class LocalChatsTest < ActionDispatch::IntegrationTest
     assert_select "a[href=?]", room_path(@room), text: /Open the Mumbai area chat/
 
     get user_sidebar_url
-    assert_select "#local_rooms a[href=?]", room_path(@room)
+    assert_select "#shared_rooms a[href=?]", room_path(@room)
   end
 
   test "members who live elsewhere can't open it, and don't see the button" do

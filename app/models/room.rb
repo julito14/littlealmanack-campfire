@@ -68,6 +68,12 @@ class Room < ApplicationRecord
     city_id.present?
   end
 
+  # Where it sits in the sidebar: the club's order (position), with local chats right after the
+  # first room, and rooms without a position after all of them.
+  def sidebar_position
+    if local? then 1.5 else position || 99_999 end
+  end
+
   def default_involvement
     "mentions"
   end
