@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2026_10_05_100000) do
+ActiveRecord::Schema[8.2].define(version: 2026_10_05_110000) do
   create_table "accounts", force: :cascade do |t|
     t.string "closed_signup_url"
     t.datetime "created_at", null: false
@@ -79,6 +79,19 @@ ActiveRecord::Schema[8.2].define(version: 2026_10_05_100000) do
     t.datetime "updated_at", null: false
     t.index ["booster_id"], name: "index_boosts_on_booster_id"
     t.index ["message_id"], name: "index_boosts_on_message_id"
+  end
+
+  create_table "cities", force: :cascade do |t|
+    t.text "alternate_names"
+    t.string "country_code", null: false
+    t.string "country_name", null: false
+    t.float "latitude", null: false
+    t.float "longitude", null: false
+    t.string "name", null: false
+    t.integer "population", default: 0, null: false
+    t.string "region"
+    t.text "search_names", null: false
+    t.index ["country_code"], name: "index_cities_on_country_code"
   end
 
   create_table "invitations", force: :cascade do |t|
@@ -178,6 +191,8 @@ ActiveRecord::Schema[8.2].define(version: 2026_10_05_100000) do
     t.text "bio"
     t.text "books"
     t.string "bot_token"
+    t.integer "city_id"
+    t.string "country_code"
     t.datetime "created_at", null: false
     t.string "email_address"
     t.string "instagram_handle"
@@ -192,6 +207,7 @@ ActiveRecord::Schema[8.2].define(version: 2026_10_05_100000) do
     t.string "website_url"
     t.string "x_handle"
     t.index ["bot_token"], name: "index_users_on_bot_token", unique: true
+    t.index ["city_id"], name: "index_users_on_city_id"
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 

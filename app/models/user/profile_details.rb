@@ -13,7 +13,7 @@ module User::ProfileDetails
     normalizes :linkedin_url, with: ->(value) { User::ProfileDetails.linkedin_url_from(value) }
     normalizes :x_handle, :instagram_handle, with: ->(value) { User::ProfileDetails.handle_from(value) }
 
-    validates :location, length: { maximum: 60, message: "Location can be up to 60 characters." }
+    validates :location, length: { maximum: 100, message: "Location can be up to 100 characters." }
     validates :books, length: { maximum: 300, message: "Books can be up to 300 characters in all." }
     validates :website_url, :linkedin_url, length: { maximum: 200, message: "Links can be up to 200 characters." }
     validates :x_handle, :instagram_handle, format: { with: HANDLE, message: "X and Instagram need a username, like @name." }, allow_nil: true

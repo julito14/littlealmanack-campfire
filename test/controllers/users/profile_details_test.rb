@@ -7,12 +7,13 @@ class Users::ProfileDetailsTest < ActionDispatch::IntegrationTest
 
   test "members fill in their details on their settings page" do
     get user_profile_url
-    assert_select "input[name='user[location]'][placeholder=?]", "Location (e.g. New York, US)"
+    assert_select "input[type=hidden][name='user[city_id]']"
+    assert_select "input[role=combobox][placeholder=?]", "Your city"
     assert_select "textarea[name='user[books]']"
     assert_select "input[name='user[website_url]']"
 
     put user_profile_url, params: { user: {
-      location: "Barcelona, Spain", books: "Poor Charlie's Almanack", website_url: "littlealmanack.com",
+      city_id: cities(:barcelona).id, books: "Poor Charlie's Almanack", website_url: "littlealmanack.com",
       x_handle: "@reader", linkedin_url: "reader", instagram_handle: "reader" } }
 
     assert_redirected_to user_profile_url
@@ -26,7 +27,7 @@ class Users::ProfileDetailsTest < ActionDispatch::IntegrationTest
   end
 
   test "a bad link is explained and nothing is saved" do
-    put user_profile_url, params: { user: { location: "Lisbon", website_url: "javascript:alert(1)" } }
+    put user_profile_url, params: { user: { city_id: cities(:barcelona).id, website_url: "javascript:alert(1)" } }
 
     assert_response :unprocessable_entity
     assert_select "[role=alert]", /web address/

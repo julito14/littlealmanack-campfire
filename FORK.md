@@ -43,6 +43,14 @@ releases, with one change: **people can only join through a one-time invite made
   `app/assets/stylesheets/sidebar_lists.css`; tests in `test/controllers/users/sidebar_threads_test.rb`,
   `test/models/thread_participation_test.rb`.
 - **"DM", not "Ping":** every place members see the word, including a labelled "DM <name>" profile button.
+- **Nearby:** members pick their city from a list (profile and sign-up) instead of typing a location, and
+  Members has an A–Z | Nearby switch: who's within 50 km of you, then every country with its areas (cities
+  within 50 km of each other, named after the biggest). `/cities/:id` and `/countries/:code` list who's
+  there, with "DM everyone here". City data: [GeoNames](https://www.geonames.org) cities with 15,000+
+  people, CC BY 4.0, built into `db/data/cities.tsv.gz` by `script/data/build-cities` and loaded by the
+  migration. Old free-text locations: `bin/rails cities:match_locations` shows its matches, `APPLY=1`
+  saves the sure ones. Code: `app/models/city.rb`, `app/models/city/location_match.rb`,
+  `app/models/nearby.rb`, `app/views/users/_city_picker.html.erb`, `city_picker_controller.js`.
 
 Code: `app/models/invitation.rb`, `app/controllers/accounts/invitations_controller.rb`,
 `app/views/accounts/invitations/`, `UsersController#set_invitation`, the routes for `join/:token`,

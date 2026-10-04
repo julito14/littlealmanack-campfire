@@ -1,0 +1,41 @@
+#!/usr/bin/env ruby
+# Builds db/data/cities.tsv.gz, the list the city picker searches, from GeoNames
+# (https://www.geonames.org, CC BY 4.0): every city with at least 15,000 people.
+#
+#   curl -O https://download.geonames.org/export/dump/cities15000.zip && unzip cities15000.zip
+#   curl -O https://download.geonames.org/export/dump/admin1CodesASCII.txt
+#   curl -O https://download.geonames.org/export/dump/countryInfo.txt
+#   script/data/build-cities path/to/those/files
+#
+# Keeps only Latin-script alternate names (Bangalore for Bengaluru, NYC for New York City)
+# so the file stays small; the picker matches what people type in English.
+require "zlib"
+
+Encoding.default_external = Encoding::UTF_8
+
+dir = ARGV.fetch(0) { abort "usage: script/data/build-cities DIR_WITH_GEONAMES_FILES" }
+out = File.expand_path("../../db/data/cities.tsv.gz", __dir__)
+
+countries = File.foreach(File.join(dir, "countryInfo.txt")).reject { |l| l.start_with?("#") }
+  .to_h { |l| f = l.chomp.split("\t"); [ f[0], f[4] ] }
+regions = File.foreach(File.join(dir, "admin1CodesASCII.txt"))
+  .to_h { |l| f = l.chomp.split("\t"); [ f[0], f[1] ] }
+
+LATIN = /\A[\p{Latin}\p{Zs}\p{Pd}.'’,()]+\z/
+
+rows = File.foreach(File.join(dir, "cities15000.txt")).map do |line|
+  fields = line.chomp.split("\t")
+  id, name, ascii, alternates, lat, lng = fields[0..5]
+  country, admin1, population = fields[8], fields[10], fields[14]
+
+  known = [ name, ascii ].map(&:downcase)
+  # Real alternate names start with a capital (Bangalore, NYC); lowercase ones are machine transliterations
+  aliases = alternates.to_s.split(",").select { |a| a.match?(LATIN) && a.match?(/\A\p{Lu}/) && a.length.between?(2, 40) }
+    .uniq(&:downcase).reject { |a| known.include?(a.downcase) }
+
+  [ id, name, ascii, aliases.join("|"), country, countries[country].to_s, regions["#{country}.#{admin1}"].to_s,
+    lat, lng, population ].join("\t")
+end
+
+Zlib::GzipWriter.open(out) { |gz| rows.each { |row| gz.puts row } }
+puts "#{rows.size} cities → #{out} (#{File.size(out) / 1024} KB)"

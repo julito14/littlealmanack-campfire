@@ -1,0 +1,83 @@
+<% def names(*names) = "|#{names.map { |n| I18n.transliterate(n).downcase }.uniq.join("|")}|" %>
+barcelona:
+  name: Barcelona
+  country_code: ES
+  country_name: Spain
+  region: Catalonia
+  search_names: "<%= names("Barcelona") %>"
+  latitude: 41.38879
+  longitude: 2.15899
+  population: 1620343
+
+mumbai:
+  name: Mumbai
+  country_code: IN
+  country_name: India
+  region: Maharashtra
+  alternate_names: "Bombay"
+  search_names: "<%= names("Mumbai", "Bombay") %>"
+  latitude: 19.07283
+  longitude: 72.88261
+  population: 12691836
+
+ulhasnagar:
+  name: Ulhasnagar
+  country_code: IN
+  country_name: India
+  region: Maharashtra
+  search_names: "<%= names("Ulhasnagar") %>"
+  latitude: 19.21667
+  longitude: 73.15
+  population: 516584
+
+pune:
+  name: Pune
+  country_code: IN
+  country_name: India
+  region: Maharashtra
+  search_names: "<%= names("Pune") %>"
+  latitude: 18.51957
+  longitude: 73.85535
+  population: 3124458
+
+bengaluru:
+  name: Bengaluru
+  country_code: IN
+  country_name: India
+  region: Karnataka
+  alternate_names: "Bangalore|BLR"
+  search_names: "<%= names("Bengaluru", "Bangalore", "BLR") %>"
+  latitude: 12.97194
+  longitude: 77.59369
+  population: 8443675
+
+new_york:
+  name: New York City
+  country_code: US
+  country_name: United States
+  region: New York
+  alternate_names: "NYC|New York"
+  search_names: "<%= names("New York City", "NYC", "New York") %>"
+  latitude: 40.71427
+  longitude: -74.00597
+  population: 8804190
+
+fremont:
+  name: Fremont
+  country_code: US
+  country_name: United States
+  region: California
+  search_names: "<%= names("Fremont") %>"
+  latitude: 37.54827
+  longitude: -121.98857
+  population: 230504
+
+netherlands_amsterdam:
+  name: Amsterdam
+  country_code: NL
+  country_name: The Netherlands
+  region: North Holland
+  search_names: "<%= names("Amsterdam") %>"
+  latitude: 52.37403
+  longitude: 4.88969
+  population: 741636

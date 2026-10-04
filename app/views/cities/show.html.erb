@@ -1,0 +1,41 @@
+<% people = @nearby.map(&:first) %>
+<% @page_title = nearby_label(@city, people) %>
+
+<% content_for :nav do %>
+  <div class="flex-item-justify-start">
+    <%= link_back %>
+  </div>
+<% end %>
+
+<section class="panel flex flex-column gap nearby-page">
+  <header class="txt-align-center">
+    <h1 class="txt-x-large margin-none"><%= nearby_label(@city, people) %></h1>
+    <p class="txt-subtle margin-none">
+      <%= @city.place %> · <%= pluralize people.size, "member" %> within <%= Nearby::RADIUS_KM %> km
+    </p>
+  </header>
+
+  <% if people == [ Current.user ] %>
+    <p class="txt-align-center">You're the first member near <%= @city.name %> 👋 People here will show up as they join.</p>
+  <% elsif people.empty? %>
+    <p class="txt-align-center txt-subtle">No members near <%= @city.name %> yet.</p>
+  <% else %>
+    <div class="txt-align-center"><%= button_to_dm_everyone people %></div>
+  <% end %>
+
+  <ul class="nearby-page__people">
+    <% @nearby.each do |person, km| %>
+      <li>
+        <%= link_to user_path(person), class: "nearby-page__person" do %>
+          <span class="avatar"><%= image_tag fresh_user_avatar_path(person), size: 40, aria: { hidden: "true" } %></span>
+          <span class="flex flex-column min-width">
+            <strong class="overflow-ellipsis"><%= person == Current.user ? "#{person.name} (you)" : person.name %></strong>
+            <span class="txt-small txt-subtle overflow-ellipsis">
+              <%= person.city.name %><%= " · #{km.round} km" unless person.city == @city %>
+            </span>
+          </span>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+</section>

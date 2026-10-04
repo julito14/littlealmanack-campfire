@@ -1,0 +1,45 @@
+<%# The Nearby side of Members: who's around you, then every country with its biggest areas %>
+<% if city = Current.user.city %>
+  <% here = nearby.around(city).map(&:first) %>
+  <div class="nearby-card">
+    <div class="nearby-card__kicker">Near you · within <%= Nearby::RADIUS_KM %> km</div>
+    <%= link_to nearby_label(city, here), city_path(city), class: "nearby-card__title" %>
+    <div class="nearby-card__people txt-small">
+      <span class="nearby-card__faces" aria-hidden="true">
+        <% here.first(5).each do |person| %>
+          <%= image_tag fresh_user_avatar_path(person), size: 24, loading: "lazy", alt: "" %>
+        <% end %>
+      </span>
+      <%= nearby_names(here) %>
+    </div>
+    <% if here.many? %>
+      <%= button_to_dm_everyone here %>
+    <% else %>
+      <p class="txt-small margin-none">You're the first member near <%= city.name %> 👋 People here will show up as they join.</p>
+    <% end %>
+  </div>
+<% else %>
+  <div class="nearby-card nearby-card--empty">
+    <p class="margin-none">Add your city to see who's near you</p>
+    <%= link_to "Add your city", user_profile_path(anchor: "city"), class: "btn txt-small" %>
+  </div>
+<% end %>
+
+<% if nearby.countries.any? %>
+  <div class="nearby__heading">By country</div>
+  <% nearby.countries.each do |country| %>
+    <%= link_to country_path(country.code.downcase), class: "nearby-place nearby-place--country" do %>
+      <span><%= country.name %></span>
+      <span class="txt-subtle"><%= pluralize country.size, "member" %></span>
+    <% end %>
+    <% country.areas.first(3).each do |area| %>
+      <%= link_to city_path(area.city), class: "nearby-place nearby-place--area" do %>
+        <span class="overflow-ellipsis"><%= area.label %></span>
+        <span class="txt-subtle"><%= area.size %></span>
+      <% end %>
+    <% end %>
+    <% if (more = country.areas.size - 3) > 0 %>
+      <%= link_to "+ #{pluralize more, "more city", "more cities"}", country_path(country.code.downcase), class: "nearby-place nearby-place--area txt-subtle" %>
+    <% end %>
+  <% end %>
+<% end %>

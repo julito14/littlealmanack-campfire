@@ -1,0 +1,42 @@
+<% @page_title = @country.name %>
+
+<% content_for :nav do %>
+  <div class="flex-item-justify-start">
+    <%= link_back %>
+  </div>
+<% end %>
+
+<section class="panel flex flex-column gap nearby-page">
+  <header class="txt-align-center">
+    <h1 class="txt-x-large margin-none"><%= @country.name %></h1>
+    <p class="txt-subtle margin-none"><%= pluralize @country.size, "member" %></p>
+  </header>
+
+  <ul class="nearby-page__places">
+    <% @country.areas.each do |area| %>
+      <li>
+        <%= link_to city_path(area.city), class: "nearby-place" do %>
+          <span><%= area.label %></span>
+          <span class="txt-subtle"><%= area.size %></span>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+
+  <% if @country.members_without_city.any? %>
+    <div>
+      <h2 class="txt-medium margin-none">City not set</h2>
+      <p class="txt-small txt-subtle margin-none">They said <%= @country.name %>, but not where.</p>
+      <ul class="nearby-page__people">
+        <% @country.members_without_city.each do |person| %>
+          <li>
+            <%= link_to user_path(person), class: "nearby-page__person" do %>
+              <span class="avatar"><%= image_tag fresh_user_avatar_path(person), size: 40, aria: { hidden: "true" } %></span>
+              <strong class="overflow-ellipsis"><%= person.name %></strong>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+</section>

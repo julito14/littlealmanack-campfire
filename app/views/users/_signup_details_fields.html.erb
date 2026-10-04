@@ -9,14 +9,7 @@
   </label>
 </div>
 
-<div class="flex align-center gap">
-  <span class="btn" style="visibility: hidden" aria-hidden="true"></span>
-  <label class="flex align-center gap flex-item-grow txt-large input input--actor">
-    <%= form.text_field :location, class: "input", placeholder: "City, Country", maxlength: 60,
-          autocomplete: "off", aria: { label: "Location" }, data: { "1p-ignore": true } %>
-    <%= image_tag "web.svg", aria: { hidden: "true" }, size: 24, class: "colorize--black" %>
-  </label>
-</div>
+<%= render "users/city_picker", form: form, user: form.object, placeholder: "Your city (optional)" %>
 
 <div class="flex align-start gap">
   <span class="btn" style="visibility: hidden" aria-hidden="true"></span>

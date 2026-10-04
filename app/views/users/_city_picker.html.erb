@@ -1,0 +1,29 @@
+<%# locals: (form:, user:, placeholder: "Your city") -%>
+<%# Pick from the list rather than type freely, so "NYC" and "New York" end up as the same city %>
+<div id="city" class="flex align-start gap" data-controller="city-picker" data-city-picker-url-value="<%= cities_path(format: :json) %>">
+  <span class="btn" style="visibility: hidden" aria-hidden="true"></span>
+
+  <div class="city-picker flex-item-grow">
+    <%= form.hidden_field :city_id, data: { city_picker_target: "id" } %>
+
+    <div class="city-picker__field">
+      <label class="flex align-center gap input input--actor txt-large">
+        <input type="text" class="input" value="<%= user.city&.label %>" placeholder="<%= placeholder %>"
+          autocomplete="off" role="combobox" aria-label="City" aria-autocomplete="list" aria-expanded="false" aria-controls="city_suggestions"
+          data-1p-ignore="true" data-city-picker-target="input"
+          data-action="input->city-picker#search keydown->city-picker#navigate blur->city-picker#leave">
+        <%= image_tag "web.svg", aria: { hidden: "true" }, size: 24, class: "colorize--black" %>
+      </label>
+
+      <ul id="city_suggestions" class="city-picker__suggestions" role="listbox" hidden data-city-picker-target="list"></ul>
+    </div>
+
+    <p class="city-picker__hint txt-small txt-subtle">
+      <% if user.location.present? && user.city.nil? %>
+        You wrote “<%= user.location %>” before. Pick your city so members near you can find you.
+      <% else %>
+        Pick from the list. In a small town? Choose the nearest city. Only your city is shown.
+      <% end %>
+    </p>
+  </div>
+</div>

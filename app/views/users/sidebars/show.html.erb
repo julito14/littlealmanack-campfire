@@ -38,17 +38,33 @@
         </section>
 
         <section id="members_list" class="sidebar-lists__panel" hidden data-sidebar-lists-target="panel" data-name="members" aria-label="Members">
-          <div class="sidebar-lists__members">
-            <% @members.each do |member| %>
-              <%= link_to user_path(member), class: "sidebar-lists__member txt-small", title: member.name do %>
-                <span class="avatar">
-                  <%= image_tag fresh_user_avatar_path(member), size: 48, loading: "lazy", aria: { hidden: "true" } %>
-                </span>
-                <span class="overflow-ellipsis"><%= member.name.split.first %></span>
-              <% end %>
-            <% end %>
+          <%# Two ways to see members; plain radio buttons switch them, so it works without any script %>
+          <div class="members-views">
+            <div class="members-views__switch txt-small" role="radiogroup" aria-label="Show members">
+              <input type="radio" name="members_view" id="members_view_az" checked>
+              <label for="members_view_az">A–Z</label>
+              <input type="radio" name="members_view" id="members_view_nearby">
+              <label for="members_view_nearby">Nearby</label>
+            </div>
+
+            <div class="members-views__az">
+              <div class="sidebar-lists__members">
+                <% @members.each do |member| %>
+                  <%= link_to user_path(member), class: "sidebar-lists__member txt-small", title: member.name do %>
+                    <span class="avatar">
+                      <%= image_tag fresh_user_avatar_path(member), size: 48, loading: "lazy", aria: { hidden: "true" } %>
+                    </span>
+                    <span class="overflow-ellipsis"><%= member.name.split.first %></span>
+                  <% end %>
+                <% end %>
+              </div>
+              <p class="sidebar-lists__count txt-small"><%= pluralize @members.size, "member" %></p>
+            </div>
+
+            <div class="members-views__nearby">
+              <%= render "users/sidebars/nearby", nearby: Nearby.new(@members) %>
+            </div>
           </div>
-          <p class="sidebar-lists__count txt-small"><%= pluralize @members.size, "member" %></p>
         </section>
       </div>
     </turbo-frame>

@@ -67,7 +67,7 @@ class User::ProfileDetailsTest < ActiveSupport::TestCase
   end
 
   test "location and books have length limits" do
-    @user.location = "x" * 61
+    @user.location = "x" * 101
     assert_not @user.valid?
 
     @user.location = nil

@@ -8,7 +8,7 @@ class Users::SidebarsController < ApplicationController
 
     @threads = find_threads
     @unread_thread_ids = Current.user.thread_participations.unread.where(message_id: @threads.map(&:id)).pluck(:message_id).to_set
-    @members = User.active.without_bots.ordered
+    @members = User.active.without_bots.ordered.includes(:city)
   end
 
   private

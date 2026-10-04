@@ -1,11 +1,13 @@
 require "test_helper"
 
 class SignupDetailsTest < ActionDispatch::IntegrationTest
-  test "the signup page offers bio, location, books, X, and Instagram as optional fields" do
+  test "the signup page offers bio, city, books, X, and Instagram as optional fields" do
     get join_url(invitations(:pending).token)
 
     assert_select "textarea[name='user[bio]']:not([required])"
-    assert_select "input[name='user[location]']:not([required])"
+    assert_select "input[type=hidden][name='user[city_id]']"
+    assert_select "input[role=combobox][placeholder=?]:not([required])", "Your city (optional)"
+    assert_select "input[name='user[location]']", count: 0
     assert_select "textarea[name='user[books]']:not([required])"
     assert_select "input[name='user[x_handle]'][placeholder='@username']:not([required])"
     assert_select "input[name='user[instagram_handle]'][placeholder='@username']:not([required])"
@@ -33,11 +35,11 @@ class SignupDetailsTest < ActionDispatch::IntegrationTest
 
   test "details given at signup are saved with an invitation" do
     post join_url(invitations(:pending).token), params: { user: {
-      name: "Newcomer", password: "secret123456", bio: "Slow reader.", location: "Lisbon, PT", books: "Meditations\nWalden" } }
+      name: "Newcomer", password: "secret123456", bio: "Slow reader.", city_id: cities(:barcelona).id, books: "Meditations\nWalden" } }
 
     user = User.last
     assert_equal "Slow reader.", user.bio
-    assert_equal "Lisbon, PT", user.location
+    assert_equal [ cities(:barcelona), "Barcelona, Spain", "ES" ], [ user.city, user.location, user.country_code ]
     assert_equal [ "Meditations", "Walden" ], user.books_list
   end
 
@@ -45,13 +47,13 @@ class SignupDetailsTest < ActionDispatch::IntegrationTest
     accounts(:signal).update!(open_signup: true)
 
     post join_url(accounts(:signal).join_code), params: { user: {
-      name: "Seed", email_address: "seed@example.com", password: "secret123456", location: "Tokyo, JP" } }
+      name: "Seed", email_address: "seed@example.com", password: "secret123456", city_id: cities(:new_york).id } }
 
-    assert_equal "Tokyo, JP", User.find_by!(email_address: "seed@example.com").location
+    assert_equal "New York City, United States", User.find_by!(email_address: "seed@example.com").location
   end
 
   test "everything optional can be left empty" do
-    post join_url(invitations(:pending).token), params: { user: { name: "Newcomer", password: "secret123456", bio: "", location: "", books: "" } }
+    post join_url(invitations(:pending).token), params: { user: { name: "Newcomer", password: "secret123456", bio: "", city_id: "", books: "" } }
 
     assert_redirected_to root_url
     assert_nil User.last.location
@@ -60,11 +62,11 @@ class SignupDetailsTest < ActionDispatch::IntegrationTest
   test "something that can't be saved is explained, what was typed is kept, and nothing is created" do
     assert_no_difference -> { User.count } do
       post join_url(invitations(:pending).token), params: { user: {
-        name: "Newcomer", password: "secret123456", bio: "Keep me", location: "x" * 61 } }
+        name: "Newcomer", password: "secret123456", bio: "Keep me", books: "x" * 301 } }
     end
 
     assert_response :unprocessable_entity
-    assert_select "[role=alert]", /up to 60 characters/
+    assert_select "[role=alert]", /up to 300 characters/
     assert_select "textarea[name='user[bio]']", text: "Keep me"
     assert_not invitations(:pending).reload.accepted?
   end

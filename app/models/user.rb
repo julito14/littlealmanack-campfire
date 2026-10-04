@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  include Avatar, Bannable, Bot, Mentionable, ProfileDetails, Role, Transferable
+  include Avatar, Bannable, Bot, Hometown, Mentionable, ProfileDetails, Role, Transferable
 
   has_many :memberships, dependent: :delete_all
   has_many :rooms, through: :memberships

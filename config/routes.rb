@@ -100,6 +100,9 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :cities, only: %i[ index show ]
+  resources :countries, only: :show
+
   resources :searches, only: %i[ index create ] do
     delete :clear, on: :collection
   end
