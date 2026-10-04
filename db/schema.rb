@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2026_10_05_110000) do
+ActiveRecord::Schema[8.2].define(version: 2026_10_05_120000) do
   create_table "accounts", force: :cascade do |t|
     t.string "closed_signup_url"
     t.datetime "created_at", null: false
@@ -150,11 +150,13 @@ ActiveRecord::Schema[8.2].define(version: 2026_10_05_110000) do
   end
 
   create_table "rooms", force: :cascade do |t|
+    t.integer "city_id"
     t.datetime "created_at", null: false
     t.bigint "creator_id", null: false
     t.string "name"
     t.string "type", null: false
     t.datetime "updated_at", null: false
+    t.index ["city_id"], name: "index_rooms_on_city_id"
   end
 
   create_table "searches", force: :cascade do |t|

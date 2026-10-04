@@ -13,7 +13,7 @@
       <%= nearby_names(here) %>
     </div>
     <% if here.many? %>
-      <%= button_to_dm_everyone here %>
+      <%= local_chat_button city, here %>
     <% else %>
       <p class="txt-small margin-none">You're the first member near <%= city.name %> 👋 People here will show up as they join.</p>
     <% end %>

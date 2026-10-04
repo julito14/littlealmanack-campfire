@@ -21,6 +21,7 @@ class Room < ApplicationRecord
   has_many :messages, dependent: :destroy
 
   belongs_to :creator, class_name: "User", default: -> { Current.user }
+  belongs_to :city, optional: true # set on local chats (LocalChat)
 
   validate :direct_rooms_keep_their_type, on: :update
 
@@ -28,6 +29,7 @@ class Room < ApplicationRecord
   scope :closeds,         -> { where(type: "Rooms::Closed") }
   scope :directs,         -> { where(type: "Rooms::Direct") }
   scope :without_directs, -> { where.not(type: "Rooms::Direct") }
+  scope :locals,          -> { where.not(city_id: nil) }
 
   scope :ordered, -> { order("LOWER(name)") }
 
@@ -60,6 +62,10 @@ class Room < ApplicationRecord
 
   def direct?
     is_a?(Rooms::Direct)
+  end
+
+  def local?
+    city_id.present?
   end
 
   def default_involvement

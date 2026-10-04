@@ -101,6 +101,7 @@ Rails.application.routes.draw do
   end
 
   resources :cities, only: %i[ index show ]
+  resources :local_chats, only: :create
   resources :countries, only: :show
 
   resources :searches, only: %i[ index create ] do

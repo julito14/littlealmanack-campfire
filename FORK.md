@@ -51,6 +51,11 @@ releases, with one change: **people can only join through a one-time invite made
   migration. Old free-text locations: `bin/rails cities:match_locations` shows its matches, `APPLY=1`
   saves the sure ones. Code: `app/models/city.rb`, `app/models/city/location_match.rb`,
   `app/models/nearby.rb`, `app/views/users/_city_picker.html.erb`, `city_picker_controller.js`.
+- **Local chats:** "📍 Mumbai area", a closed room per area that starts itself once two members live within
+  50 km, named after the area's biggest city. Members who add a city nearby join (the "Little Almanack"
+  bot posts a hello) and those who move away leave; administrators can open any and are never removed.
+  Only for locals: others can DM people one by one. `bin/rails local_chats:start` started the chats for
+  areas that already had members. Code: `app/models/local_chat.rb`, `LocalChatsController`.
 
 Code: `app/models/invitation.rb`, `app/controllers/accounts/invitations_controller.rb`,
 `app/views/accounts/invitations/`, `UsersController#set_invitation`, the routes for `join/:token`,

@@ -20,7 +20,7 @@
   <% elsif people.empty? %>
     <p class="txt-align-center txt-subtle">No members near <%= @city.name %> yet.</p>
   <% else %>
-    <div class="txt-align-center"><%= button_to_dm_everyone people %></div>
+    <div class="txt-align-center"><%= local_chat_button @city, people %></div>
   <% end %>
 
   <ul class="nearby-page__people">

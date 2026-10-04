@@ -77,6 +77,13 @@
         <% end %>
       </div>
 
+      <%# Local chats ("📍 Mumbai area") after the club's own rooms, so they don't break its order %>
+      <div id="local_rooms" contents>
+        <% @local_memberships.each do |membership| %>
+          <%= render "users/sidebars/rooms/shared", room: membership.room, unread: membership.unread? %>
+        <% end %>
+      </div>
+
       <% if Current.user.administrator? || !Current.account.settings.restrict_room_creation_to_administrators? %>
         <%= link_to new_rooms_open_path, class: "rooms__new-btn btn room align-center gap txt-reversed", aria: { label: "New Chat Room" } do %>
           <%= image_tag "add.svg", size: 20, aria: { hidden: "true" }, style: "view-transition-name: new-room" %>

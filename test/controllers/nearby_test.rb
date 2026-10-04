@@ -18,7 +18,7 @@ class NearbyControllerTest < ActionDispatch::IntegrationTest
     users(:jason).update!(city: cities(:ulhasnagar))
     get user_sidebar_url
     assert_select ".nearby-card__title", text: "Mumbai area"
-    assert_select ".nearby-card form[action=?]", rooms_directs_path(user_ids: [ users(:jason).id ])
+    assert_select ".nearby-card a[href=?]", room_path(LocalChat.find(cities(:mumbai))), text: /Open the Mumbai area chat/
     assert_select ".nearby-place--country", text: /India\s+2 members/
   end
 

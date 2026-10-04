@@ -4,7 +4,7 @@ class Users::SidebarsController < ApplicationController
   def show
     all_memberships     = Current.user.memberships.visible.with_ordered_room
     @direct_memberships = extract_direct_memberships(all_memberships)
-    @other_memberships  = all_memberships.reject { |m| m.room.direct? }
+    @local_memberships, @other_memberships = all_memberships.reject { |m| m.room.direct? }.partition { |m| m.room.local? }
 
     @threads = find_threads
     @unread_thread_ids = Current.user.thread_participations.unread.where(message_id: @threads.map(&:id)).pluck(:message_id).to_set

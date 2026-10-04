@@ -6,6 +6,7 @@ module User::Hometown
   included do
     belongs_to :city, optional: true
     before_save :follow_city, if: :city_id_changed?
+    after_commit :follow_local_chats, if: :saved_change_to_city_id?
   end
 
   def country_name
@@ -13,6 +14,10 @@ module User::Hometown
   end
 
   private
+    def follow_local_chats
+      LocalChat.follow(self) unless bot?
+    end
+
     def follow_city
       self.location = city&.label
       self.country_code = city&.country_code
