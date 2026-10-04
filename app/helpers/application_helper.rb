@@ -22,14 +22,18 @@ module ApplicationHelper
     [ @body_class, admin_body_class, account_logo_body_class ].compact.join(" ")
   end
 
-  def link_back
-    back_url = request.referrer
+  # Back the way you came (history_back_controller.js). The referrer is only where it goes when
+  # there's no history to go back through, like a page opened from a notification.
+  def link_back(fallback: nil)
+    back_url = fallback || request.referrer
     back_url = root_path if back_url.nil? || back_url == request.url
-    link_back_to back_url
+    link_back_to back_url, history: true
   end
 
-  def link_back_to(destination)
-    link_to destination, class: "btn" do
+  def link_back_to(destination, history: false)
+    data = { controller: "history-back", action: "history-back#back", turbo_action: "replace" } if history
+
+    link_to destination, class: "btn", data: data do
       image_tag("arrow-left.svg", aria: { hidden: "true" }, size: 20) +
       tag.span("Go Back", class: "for-screen-reader")
     end

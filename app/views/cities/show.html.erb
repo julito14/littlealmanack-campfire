@@ -3,7 +3,7 @@
 
 <% content_for :nav do %>
   <div class="flex-item-justify-start">
-    <%= link_back %>
+    <%= link_back fallback: country_path(@city.country_code.downcase) %>
   </div>
 <% end %>
 

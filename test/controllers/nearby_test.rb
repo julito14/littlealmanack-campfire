@@ -35,6 +35,17 @@ class NearbyControllerTest < ActionDispatch::IntegrationTest
     assert_select ".nearby-page__person", text: /Ulhasnagar · \d+ km/
   end
 
+  test "back on a place page goes back the way you came, and otherwise up a level, never in a loop" do
+    sign_in :david
+    users(:david).update!(city: cities(:mumbai))
+
+    get city_url(cities(:mumbai)), headers: { "Referer" => country_url("in") }
+    assert_select "a[href=?][data-controller=history-back][data-turbo-action=replace]", country_path("in")
+
+    get country_url("in"), headers: { "Referer" => city_url(cities(:mumbai)) }
+    assert_select "a[href=?][data-controller=history-back]", root_path
+  end
+
   test "a country page shows its areas and who hasn't set a city" do
     sign_in :david
     users(:jason).update!(city: cities(:pune))
