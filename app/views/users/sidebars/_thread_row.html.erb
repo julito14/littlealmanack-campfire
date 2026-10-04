@@ -1,0 +1,26 @@
+<%# A row in the Threads list. Also rendered for broadcasts, so everything comes from the locals. %>
+<% cache [ thread, unread, "thread-row-v1" ] do %>
+  <% people = [ thread.creator, *thread.recent_repliers(limit: 4) ].uniq.first(4) %>
+
+  <%= link_to room_message_thread_path(thread.room, thread), id: dom_id(thread, :thread_row),
+        class: [ "thread-row", { unread: unread } ],
+        data: { sorted_list_target: "item", sorted_list_number: thread.last_reply_at.to_fs(:epoch), badge_dot_target: "unread", turbo_prefetch: false } do %>
+    <span class="<%= people.many? ? "avatar__group" : "avatar" %> thread-row__faces">
+      <% people.each do |person| %>
+        <% if people.many? %>
+          <span class="avatar"><%= image_tag fresh_user_avatar_path(person), size: 20, aria: { hidden: "true" } %></span>
+        <% else %>
+          <%= image_tag fresh_user_avatar_path(person), size: 40, aria: { hidden: "true" } %>
+        <% end %>
+      <% end %>
+    </span>
+
+    <span class="thread-row__text min-width">
+      <span class="thread-row__room overflow-ellipsis"><%= thread.room.name %></span>
+      <span class="thread-row__opening overflow-ellipsis"><%= thread.creator.name.split.first %>: <%= thread.plain_text_body.squish.truncate(90) %></span>
+      <span class="thread-row__meta">
+        <%= pluralize thread.replies_count, "reply", "replies" %> · <%= local_datetime_tag thread.last_reply_at, style: :relative %>
+      </span>
+    </span>
+  <% end %>
+<% end %>

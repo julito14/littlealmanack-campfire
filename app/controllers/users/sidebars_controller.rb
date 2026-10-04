@@ -1,12 +1,14 @@
 class Users::SidebarsController < ApplicationController
-  DIRECT_PLACEHOLDERS = 20
+  THREADS_LISTED = 50
 
   def show
     all_memberships     = Current.user.memberships.visible.with_ordered_room
     @direct_memberships = extract_direct_memberships(all_memberships)
     @other_memberships  = all_memberships.without(@direct_memberships)
 
-    @direct_placeholder_users = find_direct_placeholder_users
+    @threads = find_threads
+    @unread_thread_ids = Current.user.thread_participations.unread.where(message_id: @threads.map(&:id)).pluck(:message_id).to_set
+    @members = User.active.without_bots.ordered
   end
 
   private
@@ -14,12 +16,9 @@ class Users::SidebarsController < ApplicationController
       all_memberships.select { |m| m.room.direct? }.sort_by { |m| m.room.updated_at }.reverse
     end
 
-    def find_direct_placeholder_users
-      exclude_user_ids = user_ids_already_in_direct_rooms_with_current_user.including(Current.user.id)
-      User.active.where.not(id: exclude_user_ids).order(:created_at).limit([ DIRECT_PLACEHOLDERS - exclude_user_ids.count, 0 ].max)
-    end
-
-    def user_ids_already_in_direct_rooms_with_current_user
-      Membership.where(room_id: Current.user.rooms.directs.pluck(:id)).pluck(:user_id).uniq
+    # Every thread in the member's rooms that had a reply in the last 30 days, newest first.
+    def find_threads
+      Message.where(room_id: Current.user.memberships.visible.select(:room_id))
+        .listed_threads.limit(THREADS_LISTED).preload(:room, :creator).to_a
     end
 end

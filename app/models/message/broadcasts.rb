@@ -5,6 +5,7 @@ module Message::Broadcasts
     if reply?
       broadcast_append_to room, :messages, target: [ parent_message, :replies ]
       parent_message.broadcast_thread_summary
+      parent_message.broadcast_thread_rows
     else
       broadcast_append_to room, :messages, target: [ room, :messages ]
     end
@@ -25,7 +26,26 @@ module Message::Broadcasts
       partial: "messages/threads/replies_count", locals: { parent: self }
   end
 
+  # Moves the thread to the top of every room member's Threads list: bold for the people in it
+  # who haven't read the latest replies, plain for everyone else. Rendered twice, not per member.
+  def broadcast_thread_rows
+    unread_user_ids = thread_participations.unread.pluck(:user_id).to_set
+    rows = { true => render_thread_row(unread: true), false => render_thread_row(unread: false) }
+
+    User.where(id: room.memberships.visible.select(:user_id)).find_each do |user|
+      broadcast_thread_row_to user, html: rows[unread_user_ids.include?(user.id)]
+    end
+  end
+
+  def broadcast_thread_row_to(user, unread: false, html: render_thread_row(unread: unread))
+    Turbo::StreamsChannel.broadcast_append_to user, :rooms, target: "thread_rows", html: html
+  end
+
   private
+    def render_thread_row(unread:)
+      ApplicationController.render partial: "users/sidebars/thread_row", locals: { thread: self, unread: unread }
+    end
+
     # Fanned out to the room's members rather than published on one global stream, so
     # that the timing of activity in a room only reaches people who are in it.
     def broadcast_unread_room

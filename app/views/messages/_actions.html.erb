@@ -30,7 +30,7 @@
 
       <% if message.threadable? %>
         <%= link_to room_message_thread_path(message.room, message), class: "btn message__action-btn message__thread-btn full-width gap border-top margin-block-start-half",
-              data: { turbo_frame: "_top" } do %>
+              data: { turbo_frame: "_top", turbo_prefetch: false } do %>
           <%= image_tag "messages.svg", class: "colorize--black", size: 20, aria: { hidden: "true" } %>
           <span>Reply in thread</span>
         <% end %>

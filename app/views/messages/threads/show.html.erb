@@ -28,4 +28,10 @@
   <%= button_to_jump_to_newest_message %>
 <% end %>
 
+<%= tag.div hidden: true, data: {
+      controller: "thread-reading",
+      action: "turbo:before-stream-render@document->thread-reading#streamRendered visibilitychange@document->thread-reading#visibilityChanged",
+      thread_reading_url_value: room_message_thread_reading_path(@room, @parent_message),
+      thread_reading_replies_id_value: dom_id(@parent_message, :replies) } %>
+
 <%= render "rooms/show/composer", room: @room, thread: @parent_message %>

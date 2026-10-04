@@ -29,12 +29,20 @@ releases, with one change: **people can only join through a one-time invite made
 - **Bulk invitations:** `script/admin/create-invitations < emails.txt` prints `email,link` lines
   (needs `BASE_URL`, which ONCE sets).
 - **Threads** (after [Sabha](https://github.com/sabha-co/sabha)'s): "Reply in thread" on any message in a
-  room (not in pings, not on a reply). Replies are messages with a `parent_message_id`, kept out of the
+  room (not in DMs, not on a reply). Replies are messages with a `parent_message_id`, kept out of the
   room's timeline; the message shows "N replies · Last reply …" and the thread opens full screen at
   `/rooms/:room_id/messages/:message_id/thread`. A reply bolds the room and pushes only to the original
   poster, earlier repliers and anyone mentioned. Code: `app/models/message/threadable.rb`,
   `Messages::ThreadsController`, `app/views/messages/threads/`, `app/assets/stylesheets/threads.css`;
   tests in `test/models/message/threadable_test.rb`, `test/controllers/messages/threads_controller_test.rb`.
+- **Menu with four circles:** Rooms (where it starts), DMs, Threads and Members replace the strip of ping
+  avatars; one list shows at a time, kept for the visit (`sidebar_lists_controller.js`). Threads lists every
+  thread in your rooms with a reply in the last 30 days, bold where you're in it and haven't read the
+  latest (`ThreadParticipation`; Turbo prefetches don't count as reading). Members is everyone A–Z.
+  Icons `app/assets/images/list-*.svg` are from Tabler Icons (MIT). Code: `app/views/users/sidebars/`,
+  `app/assets/stylesheets/sidebar_lists.css`; tests in `test/controllers/users/sidebar_threads_test.rb`,
+  `test/models/thread_participation_test.rb`.
+- **"DM", not "Ping":** every place members see the word, including a labelled "DM <name>" profile button.
 
 Code: `app/models/invitation.rb`, `app/controllers/accounts/invitations_controller.rb`,
 `app/views/accounts/invitations/`, `UsersController#set_invitation`, the routes for `join/:token`,

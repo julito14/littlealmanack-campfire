@@ -1,0 +1,190 @@
+/* The Rooms, DMs, Threads and Members circles at the top of the menu, and the list each one shows */
+/* The circles share the row evenly, and shrink a little when the menu column is narrow */
+.sidebar-lists__tabs {
+  container-type: inline-size;
+  grid-auto-columns: minmax(0, 1fr);
+}
+
+.sidebar-lists__tab {
+  cursor: pointer;
+  min-inline-size: 0;
+
+  .avatar {
+    --avatar-size: 3.1rem;
+
+    margin-inline: 0;
+    max-inline-size: 100%;
+  }
+
+  @container (max-width: 270px) {
+    .direct__author {
+      font-size: 0.68rem;
+    }
+  }
+
+  &[aria-expanded="true"] {
+    .avatar--icon {
+      box-shadow: 0 0 0 2px var(--color-text);
+    }
+
+    .direct__author {
+      font-weight: 800;
+    }
+  }
+}
+
+/* A red dot on a circle when something in its list is unread */
+.sidebar__container:has(#shared_rooms .unread) .sidebar-lists__tab[data-name="rooms"],
+.sidebar__container:has(#direct_rooms .unread) .sidebar-lists__tab[data-name="dms"],
+.sidebar__container:has(#thread_rows .unread) .sidebar-lists__tab[data-name="threads"] {
+  .avatar--icon::after {
+    --size: 0.8em;
+
+    background-color: var(--color-negative);
+    block-size: var(--size);
+    border: 2px solid var(--color-bg);
+    border-radius: 50%;
+    content: "";
+    inline-size: var(--size);
+    inset: -0.1em -0.1em auto auto;
+    position: absolute;
+  }
+}
+
+.sidebar-lists__panel {
+  margin-block-end: var(--block-space);
+  padding-inline: var(--sidebar-inline-space);
+}
+
+.sidebar-lists__new {
+  gap: 0.4em;
+  margin-block-end: var(--block-space-half);
+}
+
+.sidebar-lists__empty {
+  color: var(--color-border-darker);
+  margin-block: var(--block-space-half);
+
+  .sidebar-lists__rows:has(> *) + & {
+    display: none;
+  }
+}
+
+.sidebar-lists__count {
+  color: var(--color-border-darker);
+  margin-block: var(--block-space-half) 0;
+  text-align: center;
+}
+
+/* DMs and Threads: one per row, picture on the left */
+.sidebar-lists__rows {
+  display: flex;
+  flex-direction: column;
+
+  .direct {
+    align-items: center;
+    column-gap: var(--inline-space);
+    grid-template-columns: auto minmax(0, 1fr);
+    justify-items: start;
+    padding-block: 0.4em;
+  }
+
+  .direct__author {
+    font-size: 0.9rem;
+    margin: 0;
+
+    .unread &::after {
+      inset: auto;
+      margin-inline-start: 0.5em;
+      position: static;
+      transform: none;
+    }
+  }
+
+  :is(.direct, .thread-row) > .avatar,
+  :is(.direct, .thread-row) > .avatar__group {
+    --avatar-size: 2.6rem;
+
+    margin-inline: 0;
+  }
+
+  :is(.direct, .thread-row) > .avatar__group {
+    --avatar-size: 1.25rem;
+
+    block-size: 2.6rem;
+    inline-size: 2.6rem;
+  }
+}
+
+.thread-row {
+  align-items: start;
+  border-block-end: 1px solid var(--color-border);
+  color: var(--color-text);
+  column-gap: var(--inline-space);
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  padding-block: 0.55em;
+  text-decoration: none;
+
+  &:last-child {
+    border-block-end: 0;
+  }
+}
+
+.thread-row__text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1em;
+}
+
+.thread-row__room,
+.thread-row__meta {
+  color: var(--color-border-darker);
+  font-size: 0.75rem;
+}
+
+.thread-row__opening {
+  font-size: 0.9rem;
+}
+
+.thread-row.unread {
+  .thread-row__opening,
+  .thread-row__meta {
+    color: var(--color-text);
+    font-weight: 800;
+  }
+
+  .thread-row__meta::after {
+    background-color: var(--color-text);
+    block-size: 0.55em;
+    border-radius: 50%;
+    content: "";
+    display: inline-block;
+    inline-size: 0.55em;
+    margin-inline-start: 0.5em;
+  }
+}
+
+/* Members: everyone, A to Z */
+.sidebar-lists__members {
+  display: grid;
+  gap: var(--block-space) var(--inline-space-half);
+  grid-template-columns: repeat(auto-fill, minmax(4.2rem, 1fr));
+}
+
+.sidebar-lists__member {
+  color: var(--color-text);
+  display: grid;
+  gap: 0.25em;
+  justify-items: center;
+  min-inline-size: 0;
+  text-decoration: none;
+
+  .avatar {
+    --avatar-size: 2.8rem;
+  }
+
+  > span:last-child {
+    max-inline-size: 100%;
+  }
+}

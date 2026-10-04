@@ -64,7 +64,9 @@ Rails.application.routes.draw do
 
   resources :rooms do
     resources :messages do
-      resource :thread, only: :show, module: "messages"
+      resource :thread, only: :show, module: "messages" do
+        resource :reading, only: :create, module: "threads"
+      end
     end
 
     get "messages/:message_id/thread/@:reply_id", to: "messages/threads#show", as: :message_thread_at_reply

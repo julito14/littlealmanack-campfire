@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2026_10_05_090000) do
+ActiveRecord::Schema[8.2].define(version: 2026_10_05_100000) do
   create_table "accounts", force: :cascade do |t|
     t.string "closed_signup_url"
     t.datetime "created_at", null: false
@@ -114,6 +114,7 @@ ActiveRecord::Schema[8.2].define(version: 2026_10_05_090000) do
     t.string "client_message_id", null: false
     t.datetime "created_at", null: false
     t.integer "creator_id", null: false
+    t.datetime "last_reply_at"
     t.integer "parent_message_id"
     t.integer "replies_count", default: 0, null: false
     t.integer "room_id", null: false
@@ -163,6 +164,16 @@ ActiveRecord::Schema[8.2].define(version: 2026_10_05_090000) do
     t.index ["user_id"], name: "index_sessions_on_user_id"
   end
 
+  create_table "thread_participations", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "message_id", null: false
+    t.datetime "unread_at"
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["message_id", "user_id"], name: "index_thread_participations_on_message_id_and_user_id", unique: true
+    t.index ["user_id"], name: "index_thread_participations_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.text "bio"
     t.text "books"
@@ -203,6 +214,8 @@ ActiveRecord::Schema[8.2].define(version: 2026_10_05_090000) do
   add_foreign_key "push_subscriptions", "users"
   add_foreign_key "searches", "users"
   add_foreign_key "sessions", "users"
+  add_foreign_key "thread_participations", "messages", on_delete: :cascade
+  add_foreign_key "thread_participations", "users", on_delete: :cascade
   add_foreign_key "webhooks", "users"
 
   # Virtual tables defined in this database.

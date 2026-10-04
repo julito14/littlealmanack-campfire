@@ -9,9 +9,16 @@ class Messages::ThreadsController < ApplicationController
 
   def show
     @replies = @parent_message.replies.with_creator.with_attachment_details.with_boosts.last(REPLIES_SHOWN)
+    Current.user.thread_participations.find_by(message: @parent_message)&.read unless prefetch?
   end
 
   private
+    # Turbo fetches pages ahead on hover; that isn't reading the thread. The page itself
+    # confirms the read once it's on screen (thread_reading_controller.js).
+    def prefetch?
+      request.headers["X-Sec-Purpose"] == "prefetch"
+    end
+
     def set_parent_message
       message = @room.messages.find(params[:message_id])
       @parent_message = message.parent_message || message

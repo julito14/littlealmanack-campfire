@@ -3,33 +3,58 @@
   <%= turbo_stream_from Current.user, :rooms %>
 
   <div class="sidebar__container overflow-y overflow-hide-scrollbar"
-      data-controller="badge-dot"
+      data-controller="badge-dot sidebar-lists"
       data-badge-dot-unread-class="unread"
       data-action="rooms-list:unread@window->badge-dot#update rooms-list:read@window->badge-dot#update turbo:submit-start->turbo-frame#unpermanize">
     <turbo-frame id="direct_rooms_control" target="_top">
-      <div class="directs gap overflow-x overflow-hide-scrollbar">
-        <%= link_to new_rooms_direct_path, class: "direct direct__new", data: { turbo_frame: "_self" } do %>
-          <span class="avatar avatar--icon">
-            <%= image_tag "messages-add.svg", size: 20, aria: { hidden: "true" }, class: "colorize--black" %>
-          </span>
-
-          <span class="direct__author flex max-width min-width border-radius pad-inline-half">
-            <span class="for-screen-reader">New</span>
-            <span class="txt-small overflow-clip">Ping</span>
-          </span>
-        <% end %>
-
-        <div id="direct_rooms" contents data-controller="sorted-list" data-action="rooms-list:unread@window->sorted-list#updateItem">
-          <%= render partial: "users/sidebars/rooms/direct", collection: @direct_memberships, as: :membership, cached: true %>
+      <%# Four circles; tapping one shows its list right below. Rooms is where the menu starts. %>
+      <div class="sidebar-lists">
+        <div class="directs sidebar-lists__tabs gap">
+          <%= sidebar_list_tab "rooms", "Rooms", "list-rooms.svg" %>
+          <%= sidebar_list_tab "dms", "DMs", "list-dms.svg" %>
+          <%= sidebar_list_tab "threads", "Threads", "list-threads.svg" %>
+          <%= sidebar_list_tab "members", "Members", "list-members.svg" %>
         </div>
 
-        <div contents>
-          <%= render partial: "users/sidebars/rooms/direct_placeholder", collection: @direct_placeholder_users, as: :user %>
-        </div>
+        <section id="dms_list" class="sidebar-lists__panel" hidden data-sidebar-lists-target="panel" data-name="dms" aria-label="DMs">
+          <%= link_to new_rooms_direct_path, class: "btn sidebar-lists__new txt-small", data: { turbo_frame: "_self" } do %>
+            <%= image_tag "add.svg", size: 16, aria: { hidden: "true" } %>
+            <span>New DM</span>
+          <% end %>
+
+          <div id="direct_rooms" class="sidebar-lists__rows" data-controller="sorted-list" data-action="rooms-list:unread@window->sorted-list#updateItem">
+            <%= render partial: "users/sidebars/rooms/direct", collection: @direct_memberships, as: :membership, cached: true %>
+          </div>
+          <p class="sidebar-lists__empty txt-small">No DMs yet. Open Members to send one.</p>
+        </section>
+
+        <section id="threads_list" class="sidebar-lists__panel" hidden data-sidebar-lists-target="panel" data-name="threads" aria-label="Threads">
+          <div id="thread_rows" class="sidebar-lists__rows" data-controller="sorted-list">
+            <% @threads.each do |thread| %>
+              <%= render "users/sidebars/thread_row", thread: thread, unread: @unread_thread_ids.include?(thread.id) %>
+            <% end %>
+          </div>
+          <p class="sidebar-lists__empty txt-small">No threads in the last 30 days. Start one with "Reply in thread" on any message.</p>
+        </section>
+
+        <section id="members_list" class="sidebar-lists__panel" hidden data-sidebar-lists-target="panel" data-name="members" aria-label="Members">
+          <div class="sidebar-lists__members">
+            <% @members.each do |member| %>
+              <%= link_to user_path(member), class: "sidebar-lists__member txt-small", title: member.name do %>
+                <span class="avatar">
+                  <%= image_tag fresh_user_avatar_path(member), size: 48, loading: "lazy", aria: { hidden: "true" } %>
+                </span>
+                <span class="overflow-ellipsis"><%= member.name.split.first %></span>
+              <% end %>
+            <% end %>
+          </div>
+          <p class="sidebar-lists__count txt-small"><%= pluralize @members.size, "member" %></p>
+        </section>
       </div>
     </turbo-frame>
 
-    <div class="rooms position-relative flex flex-column gap">
+    <%# Not hidden in the markup, so the rooms show even before the circles' script runs %>
+    <div id="rooms_list" class="rooms position-relative flex flex-column gap" data-sidebar-lists-target="panel" data-name="rooms" aria-label="Rooms">
       <div id="shared_rooms" contents data-controller="sorted-list">
         <% @other_memberships.each do |membership| %>
           <%= render "users/sidebars/rooms/shared", room: membership.room, unread: membership.unread? %>

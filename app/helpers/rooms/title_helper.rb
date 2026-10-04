@@ -1,5 +1,5 @@
 module Rooms::TitleHelper
-  # The room name in the nav. In a one-on-one Ping the name is the other person,
+  # The room name in the nav. In a one-on-one DM the name is the other person,
   # so it shows their photo and opens their profile; everywhere else it stays a plain label.
   def room_title_tag(room, &)
     if person = one_on_one_counterpart(room)
