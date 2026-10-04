@@ -78,7 +78,8 @@ module LocalChat
         show_in_sidebars into, of: [ user ]
       end
 
-      say into, "👋 #{user.name} from #{user.city.name} just joined the chat. Say hi!"
+      # Fits someone moving in as well as someone visiting
+      say into, "👋 #{user.name} is now in #{user.city.name}. Say hi!"
     end
 
     def say(room, text)

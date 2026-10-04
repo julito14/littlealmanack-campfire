@@ -12,7 +12,7 @@ class LocalChatTest < ActiveSupport::TestCase
     assert_equal [ "📍 Mumbai area", cities(:mumbai), LocalChat.host ], [ room.name, room.city, room.creator ]
     assert_equal [ users(:jz), users(:kevin) ].sort_by(&:id), room.users.sort_by(&:id)
     assert_match "within 50 km of Mumbai", room.messages.first.plain_text_body
-    assert_match "👋 Kevin from Ulhasnagar", room.messages.last.plain_text_body
+    assert_match "👋 Kevin is now in Ulhasnagar. Say hi!", room.messages.last.plain_text_body
   end
 
   test "there's one chat per area, and someone who moves in later joins with a hello" do
