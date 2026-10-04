@@ -1,0 +1,6 @@
+<%# Heads the replies under the thread's opening message. Carries that message's timestamp so
+    the first reply only shows a date when it came on a later day. %>
+<%= tag.div id: dom_id(parent, :replies_count), class: "thread__replies-count txt-small",
+      data: { message_timestamp: parent.created_at.to_fs(:epoch) } do %>
+  <span><%= parent.replies_count.zero? ? "No replies yet" : pluralize(parent.replies_count, "reply", "replies") %></span>
+<% end %>

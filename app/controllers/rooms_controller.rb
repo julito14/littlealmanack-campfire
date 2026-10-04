@@ -8,7 +8,11 @@ class RoomsController < ApplicationController
   end
 
   def show
-    @messages = find_messages
+    if reply = find_reply
+      redirect_to room_message_thread_at_reply_url(@room, reply.parent_message, reply)
+    else
+      @messages = find_messages
+    end
   end
 
   def destroy
@@ -43,8 +47,13 @@ class RoomsController < ApplicationController
       end
     end
 
+    # Links to a thread reply (from search, a copied link or a notification) open its thread.
+    def find_reply
+      @room.messages.where.not(parent_message_id: nil).find_by(id: params[:message_id]) if params[:message_id]
+    end
+
     def find_messages
-      messages = @room.messages.with_creator.with_attachment_details.with_boosts
+      messages = @room.messages.top_level.with_creator.with_attachment_details.with_boosts
 
       if show_first_message = messages.find_by(id: params[:message_id])
         @messages = messages.page_around(show_first_message)

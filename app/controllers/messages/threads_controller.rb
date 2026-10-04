@@ -1,0 +1,21 @@
+class Messages::ThreadsController < ApplicationController
+  include ActiveStorage::SetCurrent, RoomScoped
+
+  # Long threads open on their latest replies. Older ones aren't paged in: the thread's
+  # opening message sits above them, and that's where scrolling up stops.
+  REPLIES_SHOWN = 300
+
+  before_action :set_parent_message
+
+  def show
+    @replies = @parent_message.replies.with_creator.with_attachment_details.with_boosts.last(REPLIES_SHOWN)
+  end
+
+  private
+    def set_parent_message
+      message = @room.messages.find(params[:message_id])
+      @parent_message = message.parent_message || message
+
+      redirect_to room_at_message_url(@room, @parent_message) unless @parent_message.threadable?
+    end
+end

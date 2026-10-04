@@ -47,9 +47,9 @@ module RoomsHelper
     end
   end
 
-  def composer_form_tag(room, &)
-    form_with model: Message.new, url: room_messages_path(room),
-      id: "composer", class: "margin-block flex-item-grow contain", data: composer_data_options(room), &
+  def composer_form_tag(room, thread: nil, &)
+    form_with model: Message.new, url: room_messages_path(room, thread_id: thread&.id),
+      id: "composer", class: "margin-block flex-item-grow contain", data: composer_data_options(room, thread), &
   end
 
   def room_display_name(room, for_user: Current.user)
@@ -61,13 +61,13 @@ module RoomsHelper
   end
 
   private
-    def composer_data_options(room)
+    def composer_data_options(room, thread)
       {
         controller: "composer drop-target",
         action: composer_data_actions,
         composer_messages_outlet: "#message-area",
-        composer_toolbar_class: "composer--rich-text", composer_room_id_value: room.id
-      }
+        composer_toolbar_class: "composer--rich-text", composer_room_id_value: room.id, composer_thread_id_value: thread&.id
+      }.compact
     end
 
     def composer_data_actions

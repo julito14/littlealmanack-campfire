@@ -76,8 +76,12 @@ class Room < ApplicationRecord
       end
     end
 
+    # A thread reply only bolds the room for the people the thread concerns.
     def unread_memberships(message)
-      memberships.visible.disconnected.where.not(user: message.creator).update_all(unread_at: message.created_at, updated_at: Time.current)
+      unread = memberships.visible.disconnected.where.not(user: message.creator)
+      unread = unread.where(user_id: message.thread_audience_ids) if message.reply?
+
+      unread.update_all(unread_at: message.created_at, updated_at: Time.current)
     end
 
     def push_later(message)

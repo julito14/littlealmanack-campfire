@@ -19,7 +19,7 @@ class MessagesController < ApplicationController
 
   def create
     set_room
-    @message = @room.messages.create_with_attachment!(message_params)
+    @message = @room.messages.create_with_attachment!(message_params.merge(parent_message: thread_parent))
 
     @message.broadcast_create
     deliver_webhooks_to_bots
@@ -62,12 +62,25 @@ class MessagesController < ApplicationController
     def find_paged_messages
       case
       when params[:before].present?
-        @room.messages.with_creator.page_before(@room.messages.find(params[:before]))
+        timeline.with_creator.page_before(@room.messages.find(params[:before]))
       when params[:after].present?
-        @room.messages.with_creator.page_after(@room.messages.find(params[:after]))
+        timeline.with_creator.page_after(@room.messages.find(params[:after]))
       else
-        @room.messages.with_creator.last_page
+        timeline.with_creator.last_page
       end
+    end
+
+    # The room pages through its own messages; an open thread pages through its replies.
+    def timeline
+      if params[:thread_id].present?
+        @room.messages.find(params[:thread_id]).replies
+      else
+        @room.messages.top_level
+      end
+    end
+
+    def thread_parent
+      @room.messages.find(params[:thread_id]) if params[:thread_id].present?
     end
 
 

@@ -63,7 +63,11 @@ Rails.application.routes.draw do
   end
 
   resources :rooms do
-    resources :messages
+    resources :messages do
+      resource :thread, only: :show, module: "messages"
+    end
+
+    get "messages/:message_id/thread/@:reply_id", to: "messages/threads#show", as: :message_thread_at_reply
 
     nested do
       scope path: ":bot_key", as: :bot, defaults: { format: :json } do

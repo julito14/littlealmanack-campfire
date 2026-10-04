@@ -1,0 +1,80 @@
+/* Under a message in the room: "3 replies · Last reply 2 hours ago" */
+.message__thread-summary:empty {
+  display: none;
+}
+
+.thread-summary {
+  align-items: center;
+  border: 1px solid var(--color-border-dark);
+  border-radius: 4rem;
+  color: inherit;
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.4em;
+  margin-block-start: calc(var(--block-space-half) / 2);
+  padding: 0.2em 0.8em 0.2em 0.25em;
+  text-decoration: none;
+
+  @media (any-hover: hover) {
+    &:hover {
+      border-color: var(--color-border-darker);
+    }
+  }
+}
+
+.thread-summary__avatars {
+  display: inline-flex;
+}
+
+.thread-summary__avatar {
+  block-size: 1.5em;
+  border: 1px solid var(--color-bg);
+  border-radius: 50%;
+  inline-size: 1.5em;
+  margin-inline-end: -0.4em;
+  object-fit: cover;
+
+  &:last-child {
+    margin-inline-end: 0;
+  }
+}
+
+.thread-summary__last {
+  color: var(--color-border-darker);
+}
+
+/* "Reply in thread" in the message menu */
+.message__thread-btn {
+  --width: 100%;
+
+  border-radius: 0;
+  inline-size: 100%;
+  justify-content: center;
+  padding-block: 0.6em;
+  white-space: nowrap;
+}
+
+/* The thread page */
+.thread__replies-count {
+  align-items: center;
+  color: var(--color-border-darker);
+  display: flex;
+  gap: var(--inline-space);
+  margin-block: var(--block-space-half);
+  padding-inline: var(--inline-space);
+
+  &::before,
+  &::after {
+    border-block-start: 1px solid var(--color-border);
+    content: "";
+    flex: 1;
+  }
+}
+
+/* The opening message is already open: no summary or thread button on it here */
+.messages--thread {
+  .message__thread-summary,
+  .message__thread-btn {
+    display: none;
+  }
+}

@@ -28,6 +28,13 @@ releases, with one change: **people can only join through a one-time invite made
   [Tabler Icons](https://tabler.io/icons) (MIT License).
 - **Bulk invitations:** `script/admin/create-invitations < emails.txt` prints `email,link` lines
   (needs `BASE_URL`, which ONCE sets).
+- **Threads** (after [Sabha](https://github.com/sabha-co/sabha)'s): "Reply in thread" on any message in a
+  room (not in pings, not on a reply). Replies are messages with a `parent_message_id`, kept out of the
+  room's timeline; the message shows "N replies · Last reply …" and the thread opens full screen at
+  `/rooms/:room_id/messages/:message_id/thread`. A reply bolds the room and pushes only to the original
+  poster, earlier repliers and anyone mentioned. Code: `app/models/message/threadable.rb`,
+  `Messages::ThreadsController`, `app/views/messages/threads/`, `app/assets/stylesheets/threads.css`;
+  tests in `test/models/message/threadable_test.rb`, `test/controllers/messages/threads_controller_test.rb`.
 
 Code: `app/models/invitation.rb`, `app/controllers/accounts/invitations_controller.rb`,
 `app/views/accounts/invitations/`, `UsersController#set_invitation`, the routes for `join/:token`,

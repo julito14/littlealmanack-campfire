@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2026_10_04_120000) do
+ActiveRecord::Schema[8.2].define(version: 2026_10_05_090000) do
   create_table "accounts", force: :cascade do |t|
     t.string "closed_signup_url"
     t.datetime "created_at", null: false
@@ -114,9 +114,12 @@ ActiveRecord::Schema[8.2].define(version: 2026_10_04_120000) do
     t.string "client_message_id", null: false
     t.datetime "created_at", null: false
     t.integer "creator_id", null: false
+    t.integer "parent_message_id"
+    t.integer "replies_count", default: 0, null: false
     t.integer "room_id", null: false
     t.datetime "updated_at", null: false
     t.index ["creator_id"], name: "index_messages_on_creator_id"
+    t.index ["parent_message_id"], name: "index_messages_on_parent_message_id"
     t.index ["room_id"], name: "index_messages_on_room_id"
   end
 

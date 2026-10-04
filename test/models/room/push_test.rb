@@ -50,6 +50,22 @@ class Room::PushTest < ActiveSupport::TestCase
     wait_for_web_push_delivery_pool_tasks(2)
   end
 
+  test "a thread reply notifies the thread, not the whole room" do
+    parent = messages(:first) # by Jason, in Designers, where Jason and JZ follow everything
+
+    perform_enqueued_jobs only: Room::PushMessageJob do
+      WebPush.expects(:payload_send).times(1)
+      rooms(:designers).messages.create! body: "Only Jason hears", client_message_id: "kevin-reply", creator: users(:kevin), parent_message: parent
+    end
+    wait_for_web_push_delivery_pool_tasks(1)
+
+    perform_enqueued_jobs only: Room::PushMessageJob do
+      WebPush.expects(:payload_send).times(3)
+      rooms(:designers).messages.create! body: "Jason, Kevin and #{mention_attachment_for(:jz)}", client_message_id: "david-reply", creator: users(:david), parent_message: parent
+    end
+    wait_for_web_push_delivery_pool_tasks(4)
+  end
+
   test "destroys invalid subscriptions" do
     memberships(:kevin_designers).update! involvement: "invisible"
 

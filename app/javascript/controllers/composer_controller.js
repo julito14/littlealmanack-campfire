@@ -6,7 +6,7 @@ import { escapeHTML } from "helpers/string_helpers"
 export default class extends Controller {
   static classes = ["toolbar"]
   static targets = [ "clientid", "fields", "fileList", "text" ]
-  static values = { roomId: Number }
+  static values = { roomId: Number, threadId: Number }
   static outlets = [ "messages" ]
 
   #files = []
@@ -127,7 +127,11 @@ export default class extends Controller {
   }
 
   get #draftKey() {
-    return `composer-draft-${this.roomIdValue}`
+    if (this.hasThreadIdValue) {
+      return `composer-draft-${this.roomIdValue}-thread-${this.threadIdValue}`
+    } else {
+      return `composer-draft-${this.roomIdValue}`
+    }
   }
 
   get #usingTouchDevice() {

@@ -4,7 +4,8 @@ module MessagesHelper
   AUTO_LINK_ALLOWED_TAGS = Rails::HTML5::SafeListSanitizer.allowed_tags + ContentFilters::EDITOR_FORMATTING_TAGS
   AUTO_LINK_ALLOWED_ATTRIBUTES = Rails::HTML5::SafeListSanitizer.allowed_attributes + ContentFilters::EDITOR_FORMATTING_ATTRIBUTES
 
-  def message_area_tag(room, &)
+  # Pass the thread's opening message to show that thread rather than the room's timeline.
+  def message_area_tag(room, thread: nil, &)
     tag.div id: "message-area", class: "message-area", contents: true, data: {
       controller: "messages presence drop-target",
       action: [ messages_actions, drop_target_actions, presence_actions ].join(" "),
@@ -13,17 +14,17 @@ module MessagesHelper
       messages_me_class: "message--me",
       messages_mentioned_class: "message--mentioned",
       messages_threaded_class: "message--threaded",
-      messages_page_url_value: room_messages_url(room)
+      messages_page_url_value: room_messages_url(room, thread_id: thread&.id)
     }, &
   end
 
-  def messages_tag(room, &)
-    tag.div id: dom_id(room, :messages), class: "messages", data: {
+  def messages_tag(room, thread: nil, &)
+    tag.div id: thread ? dom_id(thread, :replies) : dom_id(room, :messages), class: [ "messages", { "messages--thread": thread } ], data: {
       controller: "maintain-scroll refresh-room",
       action: [ maintain_scroll_actions, refresh_room_actions ].join(" "),
       messages_target: "messages",
       refresh_room_loaded_at_value: room.updated_at.to_fs(:epoch),
-      refresh_room_url_value: room_refresh_url(room)
+      refresh_room_url_value: room_refresh_url(room, thread_id: thread&.id)
     }, &
   end
 

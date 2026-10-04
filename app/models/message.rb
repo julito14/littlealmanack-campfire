@@ -1,5 +1,5 @@
 class Message < ApplicationRecord
-  include Attachment, Broadcasts, Mentionee, Pagination, Searchable
+  include Attachment, Broadcasts, Mentionee, Pagination, Searchable, Threadable
 
   belongs_to :room, touch: true
   belongs_to :creator, class_name: "User", default: -> { Current.user }

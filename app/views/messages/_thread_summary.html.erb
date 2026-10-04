@@ -1,0 +1,16 @@
+<%# Shown under a message in the room once it has replies. Replaced live by Message#broadcast_thread_summary. %>
+<%= tag.div id: dom_id(message, :thread_summary), class: "message__thread-summary" do %>
+  <% if message.replies_count > 0 %>
+    <%= link_to room_message_thread_path(message.room, message), class: "thread-summary txt-small", data: { turbo_frame: "_top" } do %>
+      <span class="thread-summary__avatars" aria-hidden="true">
+        <% message.recent_repliers.each do |user| %>
+          <%= image_tag fresh_user_avatar_path(user), size: 20, alt: "", class: "thread-summary__avatar" %>
+        <% end %>
+      </span>
+      <strong><%= pluralize message.replies_count, "reply", "replies" %></strong>
+      <% if last_reply_at = message.last_reply_at %>
+        <span class="thread-summary__last">· Last reply <%= local_datetime_tag last_reply_at, style: :relative %></span>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>

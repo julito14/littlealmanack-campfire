@@ -7,8 +7,12 @@ class Room::MessagePusher
 
   def push
     build_payload.tap do |payload|
-      push_to_users_involved_in_everything(payload)
-      push_to_users_involved_in_mentions(payload)
+      if message.reply?
+        push_to_thread_audience(payload)
+      else
+        push_to_users_involved_in_everything(payload)
+        push_to_users_involved_in_mentions(payload)
+      end
     end
   end
 
@@ -16,9 +20,27 @@ class Room::MessagePusher
     def build_payload
       if room.direct?
         build_direct_payload
+      elsif message.reply?
+        build_thread_payload
       else
         build_shared_payload
       end
+    end
+
+    def build_thread_payload
+      {
+        title: "Thread in #{room.name}",
+        body: "#{message.creator.name}: #{message.plain_text_body}",
+        path: Rails.application.routes.url_helpers.room_message_thread_path(room, message.parent_message)
+      }
+    end
+
+    # Unlike the room's own messages, a reply reaches only the people in its thread (and
+    # anyone it mentions), whether the room is set to everything or to mentions. Muting the
+    # room still silences it.
+    def push_to_thread_audience(payload)
+      enqueue_payload_for_delivery payload,
+        relevant_subscriptions.merge(Membership.where(involvement: %w[ mentions everything ])).where(user_id: message.thread_audience_ids)
     end
 
     def build_direct_payload

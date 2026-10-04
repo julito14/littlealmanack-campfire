@@ -1,0 +1,31 @@
+<% @page_title = "Thread in #{room_display_name(@room)}" %>
+<% @body_class = "sidebar" %>
+<% content_for :head do %>
+  <%= turbo_exempts_page_from_preview %>
+  <meta name="current-room-id" content="<%= @room.id %>">
+<% end %>
+
+<% content_for :nav do %>
+  <%= link_back_to room_at_message_path(@room, @parent_message) %>
+
+  <span class="btn btn--reversed btn--faux room--current">
+    <h1 class="room__contents txt-medium overflow-ellipsis">Thread in <%= room_display_name(@room) %></h1>
+  </span>
+<% end %>
+
+<% content_for :sidebar, sidebar_turbo_frame_tag(src: user_sidebar_path) %>
+
+<%= message_area_tag(@room, thread: @parent_message) do %>
+  <%= render "messages/template" %>
+
+  <%= messages_tag(@room, thread: @parent_message) do %>
+    <%= render "messages/message", message: @parent_message %>
+    <%= render "messages/threads/replies_count", parent: @parent_message %>
+    <%= render partial: "messages/message", collection: @replies, cached: true %>
+  <% end %>
+
+  <%= turbo_stream_from @room, :messages, channel: "RoomMessagesChannel" %>
+  <%= button_to_jump_to_newest_message %>
+<% end %>
+
+<%= render "rooms/show/composer", room: @room, thread: @parent_message %>

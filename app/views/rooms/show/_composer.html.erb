@@ -7,7 +7,7 @@
     <% end %>
 
     <turbo-frame id="composer-frame">
-      <%= composer_form_tag(room) do |form| %>
+      <%= composer_form_tag(room, thread: local_assigns[:thread]) do |form| %>
         <fieldset data-composer-target="fields" contents>
           <div class="flex flex-column">
             <div class="composer__filelist flex flex--align-center gap flex-wrap" data-composer-target="fileList"></div>
@@ -21,7 +21,8 @@
                         rows: 1,
                         class: "input lexxy-content",
                         style: "order: -1",
-                        aria: { multiline: "true", label: "Write a message" },
+                        aria: { multiline: "true", label: local_assigns[:thread] ? "Reply in thread" : "Write a message" },
+                        placeholder: ("Reply in thread" if local_assigns[:thread]),
                         "permitted-attachment-types": "application/vnd.campfire.mention application/vnd.actiontext.opengraph-embed",
                         data: {
                           controller: "unfurl",
