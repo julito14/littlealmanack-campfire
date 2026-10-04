@@ -21,6 +21,7 @@ Rails.application.routes.draw do
 
       resources :invitations, only: %i[ index create destroy ]
       resource :open_signup, only: %i[ create update destroy ]
+      resource :signup_redirect, only: :update
       resource :logo, only: %i[ show destroy ]
       resource :custom_styles, only: %i[ edit update ]
     end
@@ -30,6 +31,7 @@ Rails.application.routes.draw do
     route_for :account_logo, v: Current.account&.updated_at&.to_fs(:number), size: options[:size]
   end
 
+  get "join", to: "joins#show", as: :join_landing
   get "join/:token", to: "users#new", as: :join
   post "join/:token", to: "users#create"
 

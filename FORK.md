@@ -14,6 +14,9 @@ releases, with one change: **people can only join through a one-time invite made
   It's the account's join code, off by default; turning it off makes the link 404 at once, and
   "new link" replaces it. Personal invitations keep working either way. Sign-ups are rate-limited,
   and `users.joined_via` records "invitation" or "open_link" for later pruning.
+- **Permanent join address:** `/join` follows whatever sign-up is current: the open sign-up page
+  while it's on; otherwise an admin-set `closed_signup_url` (e.g. a checkout page) or a friendly
+  "not open right now" page. Share `/join` in articles so they never go stale.
 - **Members can't invite anyone.** The join link is gone from Account settings and from the welcome
   note in the first room; both now show an "Invite people" button to administrators only.
   The old `/join/<account code>` links return 404.

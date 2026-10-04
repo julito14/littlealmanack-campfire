@@ -33,6 +33,29 @@
         22
       ],
       "note": ""
+    },
+    {
+      "warning_type": "Redirect",
+      "warning_code": 18,
+      "fingerprint": "8331a38be71e5ad9a0d6e8626be005e868c3286da66635daade215dffbdc001f",
+      "check_name": "Redirect",
+      "message": "Possible unprotected redirect",
+      "file": "app/controllers/joins_controller.rb",
+      "line": 10,
+      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
+      "code": "redirect_to(Current.account.closed_signup_url, :allow_other_host => true)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "JoinsController",
+        "method": "show"
+      },
+      "user_input": "Current.account.closed_signup_url",
+      "confidence": "Weak",
+      "cwe_id": [
+        601
+      ],
+      "note": "Intentional: /join forwards to Account#closed_signup_url when open sign-up is off. Only administrators can set it (Accounts::SignupRedirectsController, ensure_can_administer) and it is validated as an http(s) URL; no request parameter reaches this redirect."
     }
   ],
   "brakeman_version": "7.1.0"

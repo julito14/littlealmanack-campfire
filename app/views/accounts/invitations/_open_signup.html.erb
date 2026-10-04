@@ -22,25 +22,58 @@
     <% end %>
   </div>
 
+  <% share_url = join_landing_url %>
+  <div class="flex flex-column" style="--row-gap: 0.25em">
+    <div class="txt-small"><strong>Link to share</strong> <span class="txt-subtle">(always works: it follows whatever sign-up is current)</span></div>
+    <div class="flex align-center gap">
+      <%= image_tag "link.svg", aria: { hidden: "true" }, size: 20, class: "colorize--black" %>
+      <div class="flex-item-grow">
+        <input type="text" class="input full-width fill-white" value="<%= share_url %>" aria-label="Link to share" readonly>
+      </div>
+      <%= button_to_copy_to_clipboard(share_url) do %>
+        <%= image_tag "copy-paste.svg", aria: { hidden: "true" }, size: 20 %>
+        <span class="for-screen-reader">Copy link to share</span>
+      <% end %>
+    </div>
+  </div>
+
   <% if open %>
     <% url = join_url(Current.account.join_code) %>
 
-    <div class="flex align-center gap">
-      <%= image_tag "link.svg", aria: { hidden: "true" }, size: 20, class: "colorize--black" %>
+    <div class="flex flex-column" style="--row-gap: 0.25em">
+      <div class="txt-small"><strong>Current sign-up page</strong> <span class="txt-subtle">(changes if you make a new link)</span></div>
+      <div class="flex align-center gap">
+        <%= image_tag "link.svg", aria: { hidden: "true" }, size: 20, class: "colorize--black" %>
 
-      <div class="flex-item-grow">
-        <input type="text" class="input full-width fill-white" value="<%= url %>" aria-label="Open sign-up link" readonly>
+        <div class="flex-item-grow">
+          <input type="text" class="input full-width fill-white" value="<%= url %>" aria-label="Open sign-up link" readonly>
+        </div>
+
+        <%= button_to_copy_to_clipboard(url) do %>
+          <%= image_tag "copy-paste.svg", aria: { hidden: "true" }, size: 20 %>
+          <span class="for-screen-reader">Copy open sign-up link</span>
+        <% end %>
+
+        <%= button_to account_open_signup_path, method: :patch, class: "btn",
+              data: { turbo_confirm: "Make a new link? The current one stops working. The link to share keeps working." } do %>
+          <%= image_tag "refresh.svg", aria: { hidden: "true" }, size: 20 %>
+          <span class="for-screen-reader">Make a new open sign-up link</span>
+        <% end %>
       </div>
+    </div>
+  <% end %>
 
-      <%= button_to_copy_to_clipboard(url) do %>
-        <%= image_tag "copy-paste.svg", aria: { hidden: "true" }, size: 20 %>
-        <span class="for-screen-reader">Copy open sign-up link</span>
-      <% end %>
-
-      <%= button_to account_open_signup_path, method: :patch, class: "btn",
-            data: { turbo_confirm: "Make a new link? The current one stops working, so anyone who has it will need the new one." } do %>
-        <%= image_tag "refresh.svg", aria: { hidden: "true" }, size: 20 %>
-        <span class="for-screen-reader">Make a new open sign-up link</span>
+  <%= form_with url: account_signup_redirect_path, method: :patch, scope: :account, class: "flex flex-column", style: "--row-gap: 0.25em" do |form| %>
+    <div class="txt-small"><strong>When sign-up is off</strong> <span class="txt-subtle">(optional: leave empty to show a "not open right now" page)</span></div>
+    <div class="flex align-center gap">
+      <%= image_tag "web.svg", aria: { hidden: "true" }, size: 20, class: "colorize--black" %>
+      <div class="flex-item-grow">
+        <%= form.text_field :closed_signup_url, value: Current.account.closed_signup_url, class: "input full-width fill-white",
+              placeholder: "Send visitors to… (e.g. a checkout page)", autocomplete: "off", aria: { label: "When sign-up is off, send visitors to" } %>
+      </div>
+      <%= form.button class: "btn", type: "submit" do %>
+        <%= image_tag "check.svg", aria: { hidden: "true" }, size: 20 %>
+        <span class="for-screen-reader">Save</span>
       <% end %>
     </div>
   <% end %>
