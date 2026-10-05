@@ -1,0 +1,7 @@
+/* Pages cross-fade as you move around (the view-transition meta in the layout). The browser's
+   default quarter-second fade made switching rooms feel slow, so keep it brief. */
+::view-transition-group(*),
+::view-transition-old(*),
+::view-transition-new(*) {
+  animation-duration: 0.1s;
+}
