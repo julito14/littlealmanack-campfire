@@ -46,8 +46,11 @@ module LocalChat
     end
   end
 
+  # The club's own account, which owns the chats and posts their notes, with the club's book as
+  # its picture.
   def host
-    User.active_bots.find_by(name: HOST_NAME) || User.create_bot!(name: HOST_NAME)
+    bot = User.active_bots.find_by(name: HOST_NAME) || User.create_bot!(name: HOST_NAME)
+    bot.tap { give_host_its_picture(bot) unless bot.avatar.attached? }
   end
 
   private
@@ -78,8 +81,23 @@ module LocalChat
         show_in_sidebars into, of: [ user ]
       end
 
-      # Fits someone moving in as well as someone visiting
-      say into, "👋 #{user.name} is now in #{user.city.name}. Say hi!"
+      say into, hello_for(user) unless greeted_recently?(user, room: into)
+    end
+
+    # Fits someone moving in as well as someone visiting
+    def hello_for(user)
+      "👋 #{user.name} is now in #{user.city.name}. Say hi!"
+    end
+
+    # Someone who switches city away and back (or fixes a wrong pick) isn't announced twice.
+    def greeted_recently?(user, room:)
+      room.messages.where(creator: host, created_at: 1.day.ago..)
+        .any? { |message| message.plain_text_body.start_with?("👋 #{user.name} ") }
+    end
+
+    def give_host_its_picture(bot)
+      bot.avatar.attach io: File.open(Rails.root.join("app/assets/images/little-almanack-avatar.png")),
+        filename: "little-almanack.png", content_type: "image/png"
     end
 
     def say(room, text)

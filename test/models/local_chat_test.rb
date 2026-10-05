@@ -27,6 +27,23 @@ class LocalChatTest < ActiveSupport::TestCase
     assert_match "👋 David", room.messages.last.plain_text_body
   end
 
+  test "switching city away and back within a day isn't announced twice" do
+    users(:jz).update!(city: cities(:mumbai))
+    users(:kevin).update!(city: cities(:ulhasnagar))
+    room = LocalChat.find(cities(:mumbai))
+
+    users(:kevin).update!(city: cities(:pune))
+    users(:kevin).update!(city: cities(:mumbai))
+
+    assert_includes room.reload.users, users(:kevin)
+    assert_equal 1, room.messages.count { |message| message.plain_text_body.start_with?("👋 Kevin ") }
+  end
+
+  test "the club account has the club's book as its picture" do
+    assert LocalChat.host.avatar.attached?
+    assert LocalChat.host.bot?
+  end
+
   test "moving away leaves the chat, unless you're an administrator" do
     users(:jz).update!(city: cities(:mumbai))
     users(:kevin).update!(city: cities(:ulhasnagar))
