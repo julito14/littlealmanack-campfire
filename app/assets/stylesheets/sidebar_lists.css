@@ -188,3 +188,21 @@
     max-inline-size: 100%;
   }
 }
+
+/* Where something new is: unread rooms, DMs and threads carry the same red dot as the circles
+   (and the app's icon), so the bold alone doesn't have to tell you */
+#shared_rooms .room.unread::after,
+.sidebar-lists__rows .direct.unread .direct__author::after,
+.thread-row.unread .thread-row__meta::after {
+  background-color: var(--color-negative);
+}
+
+#shared_rooms .room.unread::after {
+  --size: 0.6em;
+
+  block-size: var(--size);
+  border-radius: 50%;
+  content: "";
+  flex-shrink: 0;
+  inline-size: var(--size);
+}
