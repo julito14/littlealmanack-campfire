@@ -1,0 +1,21 @@
+<% @page_title = "Support & tips" %>
+
+<% content_for :nav do %>
+  <div class="flex-item-justify-start">
+    <%= link_back fallback: root_path %>
+  </div>
+
+  <% if Current.user.administrator? %>
+    <div class="flex-item-justify-end">
+      <%= link_to edit_support_page_path, class: "btn", data: { turbo_action: "replace" } do %>
+        <%= image_tag "pencil.svg", aria: { hidden: "true" } %>
+        <span class="for-screen-reader">Edit Support & tips</span>
+      <% end %>
+    </div>
+  <% end %>
+<% end %>
+
+<section class="panel support-page">
+  <h1 class="txt-x-large margin-none txt-align-center">Support &amp; tips</h1>
+  <%= support_text %>
+</section>

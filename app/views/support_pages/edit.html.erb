@@ -1,0 +1,30 @@
+<% @page_title = "Edit Support & tips" %>
+
+<% content_for :nav do %>
+  <div class="flex-item-justify-start">
+    <%= link_to support_page_path, class: "btn", data: { turbo_action: "replace" } do %>
+      <%= image_tag "arrow-left.svg", aria: { hidden: "true" }, size: 20 %>
+      <span class="for-screen-reader">Cancel editing</span>
+    <% end %>
+  </div>
+<% end %>
+
+<section class="panel support-page support-page--editing">
+  <h1 class="txt-x-large margin-none txt-align-center">Edit Support &amp; tips</h1>
+  <p class="txt-small txt-subtle txt-align-center margin-none">Everyone in the club sees this page. Only administrators can change it.</p>
+
+  <%= form_with model: Current.account, url: support_page_path, method: :patch,
+        data: { controller: "form", action: "lexxy:file-accept->form#preventAttachment", turbo_action: "replace" } do |form| %>
+    <div class="input input--actor support-page__editor">
+      <%= form.rich_text_area :support_text, value: support_text_for_editing, class: "lexxy-content",
+            aria: { label: "Support & tips" } %>
+    </div>
+
+    <div class="flex justify-end margin-block-start">
+      <%= form.button type: "submit", class: "btn btn--reversed gap" do %>
+        <%= image_tag "check.svg", aria: { hidden: "true" }, size: 20 %>
+        <span>Save</span>
+      <% end %>
+    </div>
+  <% end %>
+</section>

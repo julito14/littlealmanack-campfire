@@ -8,6 +8,10 @@ class Account < ApplicationRecord
 
   has_json :settings, restrict_room_creation_to_administrators: false
 
+  # The "Support & tips" page at the bottom of Rooms; until an administrator edits it, members
+  # see the starting text in app/views/support_pages/_default.html.erb.
+  has_rich_text :support_text
+
   def logo_variant(size)
     logo.variant(size).processed if logo.variable?
   end

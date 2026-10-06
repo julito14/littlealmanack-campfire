@@ -100,6 +100,7 @@ Rails.application.routes.draw do
     end
   end
 
+  resource :support_page, path: "support", only: %i[ show edit update ]
   resources :cities, only: %i[ index show ]
   resources :local_chats, only: :create
   resources :countries, only: :show

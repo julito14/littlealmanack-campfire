@@ -1,0 +1,67 @@
+/* "Support & tips" at the bottom of Rooms: a page to read, not a chat, so it looks different */
+.support-link {
+  align-items: center;
+  border: 1px dashed var(--color-border-darker);
+  border-radius: 0.8em;
+  color: var(--color-text);
+  display: flex;
+  gap: 0.7em;
+  margin-block-start: var(--block-space);
+  padding: 0.6em 0.9em;
+  text-decoration: none;
+
+  @media (any-hover: hover) {
+    &:hover {
+      border-style: solid;
+    }
+  }
+}
+
+.support-link__hint {
+  color: var(--color-border-darker);
+}
+
+/* The page itself: room to read, with its headings and lists spaced out (message text
+   elsewhere stacks without margins) */
+.support-page {
+  --panel-width: 42rem; /* .panel keeps it within the screen */
+
+  .lexxy-content {
+    --lexxy-content-margin: 0.6em;
+
+    line-height: 1.55;
+    text-align: start;
+
+    h2 {
+      font-size: 1.3em;
+      margin-block: 1.4em 0.4em;
+    }
+
+    h3 {
+      font-size: 1.05em;
+      margin-block: 1.1em 0.3em;
+    }
+
+    ul,
+    ol {
+      margin-block: 0.3em;
+      padding-inline-start: 1.3em;
+    }
+
+    li {
+      margin-block: 0.35em;
+    }
+  }
+}
+
+/* Editing: the full toolbar on every screen, and a tall writing area */
+.support-page--editing {
+  lexxy-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .support-page__editor lexxy-editor {
+    min-block-size: 22rem;
+  }
+}

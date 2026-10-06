@@ -82,6 +82,15 @@
           <%= image_tag "add.svg", size: 20, aria: { hidden: "true" }, style: "view-transition-name: new-room" %>
         <% end %>
       <% end %>
+
+      <%# A page to read, not a chat, so it looks different from the rooms above %>
+      <%= link_to support_page_path, class: "support-link" do %>
+        <%= image_tag "lifebuoy.svg", size: 22, class: "colorize--black flex-item-no-shrink", aria: { hidden: "true" } %>
+        <span class="flex flex-column min-width">
+          <span>Support &amp; tips</span>
+          <span class="support-link__hint txt-small">Help, and how to get the most out of the club</span>
+        </span>
+      <% end %>
     </div>
 
     <button class="btn sidebar__toggle" data-action="toggle-class#toggle">

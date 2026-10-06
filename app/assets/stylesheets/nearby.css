@@ -173,8 +173,7 @@
 
 /* The city and country pages */
 .nearby-page {
-  margin-inline: auto;
-  max-inline-size: 34rem;
+  --panel-width: 34rem; /* .panel keeps it within the screen */
 
   ul {
     list-style: none;

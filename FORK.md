@@ -51,6 +51,10 @@ releases, with one change: **people can only join through a one-time invite made
   migration. Old free-text locations: `bin/rails cities:match_locations` shows its matches, `APPLY=1`
   saves the sure ones. Code: `app/models/city.rb`, `app/models/city/location_match.rb`,
   `app/models/nearby.rb`, `app/views/users/_city_picker.html.erb`, `city_picker_controller.js`.
+- **Support & tips:** a read-only page at `/support`, the last item in Rooms (dashed outline, lifebuoy icon),
+  with the support email and tips for using the club. Administrators edit it in place (pencil → the
+  usual rich text editor; stored as `Account#support_text`); until then members see
+  `app/views/support_pages/_default.html.erb`.
 - **Local chats:** "📍 Mumbai area", a closed room per area that starts itself once two members live within
   50 km, named after the area's biggest city. Members who add a city nearby join (the "Little Almanack"
   bot posts a hello) and those who move away leave; administrators can open any and are never removed.
