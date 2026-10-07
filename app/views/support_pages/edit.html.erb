@@ -11,7 +11,7 @@
 
 <section class="panel support-page support-page--editing">
   <h1 class="txt-x-large margin-none txt-align-center">Edit Support &amp; tips</h1>
-  <p class="txt-small txt-subtle txt-align-center margin-none">Everyone in the club sees this page. Only administrators can change it.</p>
+  <p class="txt-small txt-subtle txt-align-center margin-none">Everyone in the community sees this page. Only administrators can change it.</p>
 
   <%= form_with model: Current.account, url: support_page_path, method: :patch,
         data: { controller: "form", action: "lexxy:file-accept->form#preventAttachment", turbo_action: "replace" } do |form| %>
