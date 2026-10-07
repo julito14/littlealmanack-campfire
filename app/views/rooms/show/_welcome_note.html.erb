@@ -1,7 +1,8 @@
 <%# Shown once, the first time a new member arrives (they land in the first room, 👋 Hi) %>
 <% hi = Current.user.rooms.original %>
 <%= tag.dialog class: "welcome-note", aria: { labelledby: "welcome_note_title" },
-      data: { controller: "welcome-note", welcome_note_url_value: welcome_note_path, action: "close->welcome-note#closed" } do %>
+      data: { controller: "welcome-note", welcome_note_url_value: welcome_note_path,
+              action: "close->welcome-note#closed turbo:before-cache@document->welcome-note#forget" } do %>
   <%= image_tag "little-almanack-avatar.png", size: 64, alt: "", class: "welcome-note__logo" %>
   <h2 id="welcome_note_title" class="welcome-note__title">Welcome to <%= Current.account.name %>!</h2>
 

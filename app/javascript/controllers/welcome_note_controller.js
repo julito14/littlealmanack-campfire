@@ -9,12 +9,21 @@ export default class extends Controller {
   static values = { url: String }
 
   async connect() {
+    // Already open means it came back from Turbo's page cache (going back after following one
+    // of its links), not from the server: it has been seen, so it goes
+    if (this.element.open) return this.forget()
+
     await nextFrame()
-    if (!this.element.open) this.element.showModal()
+    this.element.showModal()
     post(this.urlValue)
   }
 
   closed() {
     document.querySelector("#composer lexxy-editor")?.focus()
+  }
+
+  // Before Turbo snapshots the page for its back button, so the note isn't saved in it
+  forget() {
+    this.element.remove()
   }
 }
