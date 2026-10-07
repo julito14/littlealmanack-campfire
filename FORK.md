@@ -55,6 +55,9 @@ releases, with one change: **people can only join through a one-time invite made
   with the support email and tips for using the club. Administrators edit it in place (pencil → the
   usual rich text editor; stored as `Account#support_text`); until then members see
   `app/views/support_pages/_default.html.erb`.
+- **Welcome note:** a one-time pop-up for new members over the room they land in (👋 Hi): introduce
+  yourself, and Support & tips. Shown once per member (`users.welcomed_at`, set as soon as it's shown);
+  everyone who joined before it existed is marked welcomed.
 - **Local chats:** "📍 Mumbai area", a closed room per area that starts itself once two members live within
   50 km, named after the area's biggest city. Members who add a city nearby join (the "Little Almanack"
   bot posts a hello) and those who move away leave; administrators can open any and are never removed.

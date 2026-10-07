@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2026_10_05_130000) do
+ActiveRecord::Schema[8.2].define(version: 2026_10_07_090000) do
   create_table "accounts", force: :cascade do |t|
     t.string "closed_signup_url"
     t.datetime "created_at", null: false
@@ -208,6 +208,7 @@ ActiveRecord::Schema[8.2].define(version: 2026_10_05_130000) do
     t.integer "status", default: 0, null: false
     t.datetime "updated_at", null: false
     t.string "website_url"
+    t.datetime "welcomed_at"
     t.string "x_handle"
     t.index ["bot_token"], name: "index_users_on_bot_token", unique: true
     t.index ["city_id"], name: "index_users_on_city_id"

@@ -1,0 +1,26 @@
+<%# Shown once, the first time a new member arrives (they land in the first room, 👋 Hi) %>
+<% hi = Current.user.rooms.original %>
+<%= tag.dialog class: "welcome-note", aria: { labelledby: "welcome_note_title" },
+      data: { controller: "welcome-note", welcome_note_url_value: welcome_note_path, action: "close->welcome-note#closed" } do %>
+  <%= image_tag "little-almanack-avatar.png", size: 64, alt: "", class: "welcome-note__logo" %>
+  <h2 id="welcome_note_title" class="welcome-note__title">Welcome to <%= Current.account.name %>!</h2>
+
+  <ul class="welcome-note__lines">
+    <li>
+      <span aria-hidden="true">👋</span>
+      <span>
+        Introduce yourself
+        <% if room == hi %>here in<% else %>in<% end %>
+        the <%= link_to_unless room == hi, tag.strong(welcome_room_name(hi)), room_path(hi) %> room
+      </span>
+    </li>
+    <li>
+      <span aria-hidden="true">👉</span>
+      <span>See <%= link_to "Support & tips", support_page_path %> for help, and to add the community to your home screen</span>
+    </li>
+  </ul>
+
+  <form method="dialog">
+    <button class="btn btn--reversed welcome-note__go" autofocus>Let’s go</button>
+  </form>
+<% end %>

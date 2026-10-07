@@ -22,3 +22,4 @@
 <% end %>
 
 <%= render "rooms/show/composer", room: @room %>
+<%= render "rooms/show/welcome_note", room: @room unless Current.user.welcomed_at %>
